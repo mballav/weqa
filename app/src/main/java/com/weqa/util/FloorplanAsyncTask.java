@@ -66,11 +66,16 @@ public class FloorplanAsyncTask extends AsyncTask<Object, String, String> {
         Call<FloorplanResponse> call1 = service.floorplan(input);
         try {
             response = call1.execute().body();
+
+            FloorPlanDetail firstAvailable = response.getFloorPlanDetails().get(0);
+            boolean imageReturned = ((firstAvailable.getFloorImage() != null) && (firstAvailable.getFloorImage().length() > 0));
+
             json = gson.toJson(response); // myObject - instance of MyObject
             Log.d(logTag, "OUTPUT: " + json);
-            Log.d(logTag, "Base64 Image String size: " + response.getFloorPlanDetails().get(0).getFloorImage().length());
             Log.d(logTag, "Floorplan detail response received!");
-            if (!(util.getNoSpaceOnDevice())) {
+
+
+            if (imageReturned && !(util.getNoSpaceOnDevice())) {
                 saveFloorplans(response, buildingId);
             }
         }
@@ -85,7 +90,6 @@ public class FloorplanAsyncTask extends AsyncTask<Object, String, String> {
             if (f.getFloorImage() != null && f.getFloorImage().length() > 0) {
                 byte[] decodedString = Base64.decode(f.getFloorImage(), Base64.DEFAULT);
 
-                Log.d(logTag, "GOING GOING GOING GOING to SAVE IMAGE DOWNLOADED-------------------------------------------");
                 Log.d(logTag, "Saving floorplan for floorplan ID: " + f.getFloorPlanId());
                 if (decodedString.length > extMemSize) {
                     util.setNoSpaceOnDevice(true);
@@ -97,18 +101,21 @@ public class FloorplanAsyncTask extends AsyncTask<Object, String, String> {
                             "Pictures/floorplan_" + buildingId.intValue() + "_" + f.getFloorPlanId().intValue());
                     Log.d(logTag, "Saving to file: " + "Pictures/floorplan_" + buildingId.intValue() + "_" + f.getFloorPlanId().intValue());
 
-                    if (!floorplanFile.mkdirs()) {
-                        Log.e(logTag, "Directory not created");
+                    File picturesDir = new File(Environment.getExternalStorageDirectory(), "Pictures");
+
+                    if (!picturesDir.exists()) {
+                        if (!picturesDir.mkdirs()) {
+                            Log.e(logTag, "Directory not created");
+                        }
                     }
 
                     FileOutputStream fos = new FileOutputStream(floorplanFile);
-
                     fos.write(decodedString);
-
                     fos.close();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
+                Log.d(logTag, "Floorplan saved for floorplan ID: " + f.getFloorPlanId());
             }
         }
     }

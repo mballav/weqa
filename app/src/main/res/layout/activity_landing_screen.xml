@@ -118,6 +118,7 @@
         android:id="@+id/topPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:background="@color/colorLighterGrey">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -133,6 +134,7 @@
             />
 
         <TextView
+            android:id="@+id/searchbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=" "
@@ -141,9 +143,20 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="70dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="60dp"
+            android:layout_marginEnd="100dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
+            />
+        <Button
+            android:id="@+id/qrButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="1dp"
+            android:text="QR"
+            android:padding="0dp"
             />
     </RelativeLayout>
 
@@ -160,13 +173,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorLighterGrey"
-            app:tabTextAppearance="@style/MyCustomTextAppearance"
-            app:tabBackground="@color/colorLighterGrey"
-            app:tabMode="scrollable"
-            app:tabIndicatorColor="@color/color_purple"
-            app:tabGravity="center"
-            app:tabSelectedTextColor="@color/color_purple"
-            app:tabTextColor="@color/colorDarkGrey"
+            style="@style/MyCustomTabLayout"
             />
 
         <android.support.v4.view.ViewPager
@@ -176,3 +183,4 @@
             />
     </LinearLayout>
 </RelativeLayout>
+

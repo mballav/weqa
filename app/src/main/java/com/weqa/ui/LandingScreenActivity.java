@@ -2,6 +2,7 @@ package com.weqa.ui;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -17,13 +18,18 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.weqa.R;
 
 import org.w3c.dom.Text;
 
-public class LandingScreenActivity extends AppCompatActivity {
+public class LandingScreenActivity extends AppCompatActivity
+        implements View.OnClickListener {
 
     private ItemTypePagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -58,6 +64,31 @@ public class LandingScreenActivity extends AppCompatActivity {
         fontLatoReg = Typeface.createFromAsset(this.getAssets(), "font/Lato-Regular.ttf");
 
         changeTabsFont();
+
+        Button qrButton = (Button) findViewById(R.id.qrButton);
+        qrButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setOrientationLocked(false);
+        integrator.initiateScan();
+    }
+
+    // Get the results:
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void changeTabsFont() {

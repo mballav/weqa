@@ -29,19 +29,38 @@
             android:textColor="@color/colorWhite"
             />
 
-        <TextView
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/search_bar_rectangle_white_no_border"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="List"
-            android:textColor="@color/color_purple"
             android:layout_toRightOf="@id/floorNumber"
             android:layout_marginLeft="5dp"
-            />
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            >
+
+            <ImageView
+                android:id="@+id/listicon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/list_16"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="List"
+                android:textColor="@color/color_purple"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@id/listicon"
+                android:layout_marginLeft="5dp"
+                />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
