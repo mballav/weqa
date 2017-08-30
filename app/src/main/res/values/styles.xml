@@ -15,23 +15,23 @@
     </style>
 
     <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="textAllCaps">false</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@color/color_purple</item>
+        <item name="tabIndicatorColor">@color/colorTABtextSelected</item>
         <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
-        <item name="tabBackground">@color/colorLighterGrey</item>
+        <item name="tabBackground">@color/colorTABbg</item>
         <item name="tabMode">scrollable</item>
         <item name="tabGravity">center</item>
-        <item name="tabSelectedTextColor">@color/color_purple</item>
-        <item name="tabTextColor">@color/colorDarkGrey</item>
+        <item name="tabSelectedTextColor">@color/colorTABtextSelected</item>
+        <item name="tabTextColor">@color/colorTABtext</item>
     </style>
 
     <style name="smallgreytext">
-        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textColor">@color/colorTABtext</item>
         <item name="android:textSize">10sp</item>
     </style>
     <style name="smalllightgreytext">

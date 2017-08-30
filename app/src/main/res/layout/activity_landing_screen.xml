@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorWhite">
+        android:background="@color/colorMENU">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -19,9 +19,9 @@
             android:orientation="vertical" >
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/home1" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/home1_white" />
 
             <TextView
                 android:id="@+id/textView1"
@@ -42,9 +42,9 @@
             android:paddingTop="10dp">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/activity" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/activity_white" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -64,6 +64,7 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/cameracircle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/nonactive_dot"
@@ -78,9 +79,9 @@
             android:orientation="vertical" >
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/team" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/team_white" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -99,9 +100,9 @@
             android:orientation="vertical" >
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/more" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/more_white" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -119,14 +120,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/colorLighterGrey">
+        android:background="@color/colorTOP"
+        android:paddingBottom="4dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/userimg"
             app:civ_border_width="1dp"
-            app:civ_border_color="#000000"
+            app:civ_border_color="@color/colorTABtextSelected"
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
             android:layout_alignParentStart="true"
@@ -138,25 +140,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=" "
-            android:textSize="32sp"
+            android:textSize="18sp"
             android:background="@drawable/search_bar_rectangle_white"
             android:layout_alignParentStart="true"
             android:layout_marginStart="70dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="100dp"
+            android:layout_marginEnd="50dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
-            />
-        <Button
-            android:id="@+id/qrButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="1dp"
-            android:text="QR"
-            android:padding="0dp"
             />
     </RelativeLayout>
 

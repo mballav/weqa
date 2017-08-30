@@ -38,7 +38,7 @@ public class LandingScreenActivity extends AppCompatActivity
 
     private int previousTabPosition = 0;
 
-    private Typeface fontAwesome, fontLatoReg, fontLatoBlack, fontLatoLight;
+    public static Typeface fontAwesome, fontLatoReg, fontLatoBlack, fontLatoLight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +65,8 @@ public class LandingScreenActivity extends AppCompatActivity
 
         changeTabsFont();
 
-        Button qrButton = (Button) findViewById(R.id.qrButton);
-        qrButton.setOnClickListener(this);
+        TextView cameraCircle = (TextView) findViewById(R.id.cameracircle);
+        cameraCircle.setOnClickListener(this);
     }
 
     @Override
@@ -139,6 +139,12 @@ public class LandingScreenActivity extends AppCompatActivity
 
             TextView floorNumberText = (TextView) rootView.findViewById(R.id.floorNumber);
             floorNumberText.setText("Floor " + itemTypeNumber);
+
+            TextView listIconText = (TextView) rootView.findViewById(R.id.listicontext);
+            listIconText.setTypeface(fontLatoBlack);
+
+            TextView tapToEnlarge = (TextView) rootView.findViewById(R.id.taptoenlarge);
+            tapToEnlarge.setTypeface(fontLatoBlack);
 
             return rootView;
         }

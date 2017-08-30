@@ -15,4 +15,11 @@
     <color name="color_preloader_center">#000000</color>
     <color name="color_preloader_end">#ff56a9c7</color>
     <color name="color_purple">#AD0057</color>
+
+    <color name="colorTOP">#292929</color>
+    <color name="colorTABbg">#3C4A57</color>
+    <color name="colorMENU">#32404E</color>
+    <color name="colorTABtext">#FFFFFF</color>
+    <color name="colorTABtextSelected">#D3FDA8</color>
+    <color name="colorLISTIcon">#28AAE1</color>
 </resources>
