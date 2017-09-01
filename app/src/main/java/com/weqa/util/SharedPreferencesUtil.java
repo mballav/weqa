@@ -195,11 +195,21 @@ public class SharedPreferencesUtil {
         return new ArrayList<Authorization>();
     }
 
-    public List<Authorization> getAuthorizationInfo(int buildingId) {
+    public String getFloorLevel(long buildingId, long floorplanId) {
+        List<Authorization> authList = getAuthorizationInfo(buildingId);
+        for (Authorization a : authList) {
+            if (Long.parseLong(a.getFloorPlanId()) == floorplanId) {
+                return a.getFloorLevel();
+            }
+        }
+        return "0";
+    }
+
+    public List<Authorization> getAuthorizationInfo(long buildingId) {
         List<Authorization> authList = getAuthorizationInfo();
         List<Authorization> buildingAuthList = new ArrayList<Authorization>();
         for (Authorization a : authList) {
-            if (Integer.parseInt(a.getBuildingId()) == buildingId) {
+            if (Long.parseLong(a.getBuildingId()) == buildingId) {
                 buildingAuthList.add(a);
             }
         }

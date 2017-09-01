@@ -7,7 +7,9 @@ import com.weqa.model.AvailabilityInput;
 import com.weqa.model.FloorplanImage;
 import com.weqa.model.FloorplanImageInput;
 import com.weqa.model.FloorplanInput;
+import com.weqa.model.FloorplanInputV2;
 import com.weqa.model.FloorplanResponse;
+import com.weqa.model.FloorplanResponseV2;
 
 import java.util.List;
 
@@ -32,4 +34,8 @@ public interface AuthService {
 
     @POST("api/security/FloorInfo")
     Call<FloorplanResponse> floorplan(@Body FloorplanInput input);
+
+    @POST("api/security/Item")
+    Call<FloorplanResponseV2> floorplanV2(@Body FloorplanInputV2 input);
+
 }

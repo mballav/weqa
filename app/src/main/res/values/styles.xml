@@ -25,7 +25,8 @@
         <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
         <item name="tabBackground">@color/colorTABbg</item>
         <item name="tabMode">scrollable</item>
-        <item name="tabGravity">center</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
         <item name="tabSelectedTextColor">@color/colorTABtextSelected</item>
         <item name="tabTextColor">@color/colorTABtext</item>
     </style>

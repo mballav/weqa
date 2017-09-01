@@ -14,6 +14,9 @@ public interface CodeConstants {
     public static final String AC60 = "AC60";
     public static final String AC70 = "AC70";
 
+    public static final String AC101 = "AC101";
+    public static final String AC201 = "AC201";
+
     public static final String RC10 = "RC10";
     public static final String RC20 = "RC20";
     public static final String RC30 = "RC30";

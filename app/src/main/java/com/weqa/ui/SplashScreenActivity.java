@@ -19,7 +19,7 @@ import retrofit2.Retrofit;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = "YEZLO-LOG";
+    private static final String LOG_TAG = "WEQA-LOG";
 
     Thread thread = new Thread(){
         @Override

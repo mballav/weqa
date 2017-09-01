@@ -1,15 +1,18 @@
 package com.weqa.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.weqa.model.AuthInput;
 import com.weqa.model.AuthResponse;
 import com.weqa.service.AuthService;
 import com.weqa.ui.BuildingSelectionActivity;
+import com.weqa.ui.LandingScreenActivity;
 
 import java.io.IOException;
 
@@ -27,12 +30,12 @@ public class AuthAsyncTask extends AsyncTask<Object, String, String> {
 
     private Retrofit retrofit;
     private String logTag;
-    private Context context;
+    private Activity activity;
 
-    public AuthAsyncTask(Retrofit retrofit, String logTAG, Context context) {
+    public AuthAsyncTask(Retrofit retrofit, String logTAG, Activity activity) {
         this.retrofit = retrofit;
         this.logTag = logTAG;
-        this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class AuthAsyncTask extends AsyncTask<Object, String, String> {
     }
 
     private void auth(AuthInput input) {
-        SharedPreferencesUtil sharedPrefUtil = new SharedPreferencesUtil(this.context);
+        SharedPreferencesUtil sharedPrefUtil = new SharedPreferencesUtil(this.activity.getApplicationContext());
         AuthService service = retrofit.create(AuthService.class);
         Call<AuthResponse> call1 = service.auth(input);
         try {
@@ -61,10 +64,6 @@ public class AuthAsyncTask extends AsyncTask<Object, String, String> {
             Log.d(logTag, inputJson);
             Log.d(logTag, json);
             Log.d(logTag, "Auth response received!");
-
-            Intent i = new Intent(this.context, BuildingSelectionActivity.class);
-            this.context.startActivity(i);
-
         }
         catch (IOException ioe) {
             Log.e(logTag, "Error in retrofit call" + ioe.getMessage());
@@ -75,4 +74,27 @@ public class AuthAsyncTask extends AsyncTask<Object, String, String> {
     protected void onPreExecute() {
     }
 
+    protected void onPostExecute(String status) {
+
+        final Activity a = this.activity;
+        final Context context = this.activity.getApplication();
+
+        if (status.equals(STATUS_OK)) {
+
+            // This code will always run on the UI thread, therefore is safe to modify UI elements.
+            Intent i = new Intent(context, LandingScreenActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
+        }
+        else {
+
+            this.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Problem with connectivity... exiting!", Toast.LENGTH_LONG).show();
+                    a.finish();
+                }
+            });
+        }
+    }
 }

@@ -38,7 +38,7 @@ public class BuildingSelectionActivity extends AppCompatActivity implements Avai
     TextView work, focus, meeting, group;
     ImageView workImage, focusImage, meetingImage, groupImage;
 
-    private static final String LOG_TAG = "YEZLO-LOG";
+    private static final String LOG_TAG = "WEQA-LOG";
     private int selectedBuildingId;
 
     Map<String, Integer> itemTypeIdMap = new HashMap<String, Integer>();
@@ -49,7 +49,7 @@ public class BuildingSelectionActivity extends AppCompatActivity implements Avai
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_building_selection);
 
         work = (TextView) findViewById(R.id.work);
