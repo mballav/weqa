@@ -4,10 +4,12 @@ package com.weqa.util;
  * Created by Manish Ballav on 8/31/2017.
  */
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.weqa.model.FloorPlanDetailV2;
@@ -54,7 +56,15 @@ public class FloorplanV2AsyncTask extends AsyncTask<Object, String, String> {
         try {
             getFloorplanDetails((FloorplanInputV2) params[0], (Integer) params[1]);
         } catch (Exception e) {
-            Log.e(logTag, "Error in async task", e);
+            Log.d(logTag, "Error in async task! " + e.getMessage());
+            final Context context = this.activity.getApplicationContext();
+            this.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // This code will always run on the UI thread, therefore is safe to modify UI elements.
+                    Toast.makeText(context, "Please try again later!", Toast.LENGTH_LONG).show();
+                }
+            });
             return STATUS_FAILURE;
         }
         return STATUS_OK;
@@ -82,7 +92,15 @@ public class FloorplanV2AsyncTask extends AsyncTask<Object, String, String> {
             }
         }
         catch (IOException ioe) {
-            Log.e(logTag, "Error in retrofit call", ioe);
+            Log.d(logTag, "Error in retrofit call" + ioe.getMessage());
+            final Context context = this.activity.getApplicationContext();
+            this.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // This code will always run on the UI thread, therefore is safe to modify UI elements.
+                    Toast.makeText(context, "Connectivity Problem. Please try again later!", Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 
@@ -116,7 +134,7 @@ public class FloorplanV2AsyncTask extends AsyncTask<Object, String, String> {
                 fos.write(decodedString);
                 fos.close();
             } catch (IOException ioe) {
-                ioe.printStackTrace();
+                Log.d(logTag, "Problem saving downloaded image! " + ioe.getMessage());
             }
             Log.d(logTag, "Floorplan saved for floorplan ID: " + f.getFloorPlanId());
         }

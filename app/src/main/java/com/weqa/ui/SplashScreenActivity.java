@@ -1,5 +1,6 @@
 package com.weqa.ui;
 
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -86,4 +87,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Waiting for response...");
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 }

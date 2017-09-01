@@ -1,31 +1,29 @@
 package com.weqa.ui;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.design.widget.TabLayout;
-import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,7 +36,6 @@ import com.weqa.R;
 import com.weqa.model.Authorization;
 import com.weqa.model.CodeConstants;
 import com.weqa.model.FloorPlan;
-import com.weqa.model.FloorPlanDetail;
 import com.weqa.model.FloorPlanDetailV2;
 import com.weqa.model.FloorplanInputV2;
 import com.weqa.model.FloorplanResponseV2;
@@ -54,6 +51,8 @@ import com.weqa.util.SharedPreferencesUtil;
 import com.weqa.util.UIHelper;
 import com.weqa.widget.SearchableSpinner;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -62,10 +61,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Retrofit;
 
 public class LandingScreenActivity extends AppCompatActivity
-        implements View.OnClickListener, FloorplanV2AsyncTask.UpdateFloorplan, AdapterView.OnItemSelectedListener {
+        implements View.OnClickListener, View.OnTouchListener,
+        FloorplanV2AsyncTask.UpdateFloorplan, AdapterView.OnItemSelectedListener {
 
     private static String LOG_TAG = "WEQA-LOG";
 
@@ -73,7 +74,7 @@ public class LandingScreenActivity extends AppCompatActivity
 
     private final static String[] itemTypeHeadings = {"Desks", "Meeting Rooms", "Conference Rooms", "Focus Rooms"};
     private final static int[] itemTypeColors = {R.color.colorDarkGreen, R.color.colorDarkGreen,
-                                                    R.color.colorDarkGreen, R.color.colorDarkGreen};
+            R.color.colorDarkGreen, R.color.colorDarkGreen};
     private byte[] decodedString;
     private String floorLevel;
     private Map<Integer, String> locationsMap = new HashMap<Integer, String>();
@@ -136,9 +137,6 @@ public class LandingScreenActivity extends AppCompatActivity
 
         floorNumberText = (TextView) findViewById(R.id.floorNumber);
 
-        TextView cameraCircle = (TextView) findViewById(R.id.cameracircle);
-        cameraCircle.setOnClickListener(this);
-
         spinner = (SearchableSpinner) findViewById(R.id.spinner);
 
         spinner.setPositiveButton("OK");
@@ -171,7 +169,272 @@ public class LandingScreenActivity extends AppCompatActivity
 
         floorplan = (PhotoView) findViewById(R.id.floorplan);
 
+        CircleImageView profilePicture = (CircleImageView) findViewById(R.id.profilepicture);
+        profilePicture.setOnClickListener(this);
+
+        LinearLayout menu1 = (LinearLayout) findViewById(R.id.menu1);
+        LinearLayout menu2 = (LinearLayout) findViewById(R.id.menu2);
+        LinearLayout menu3 = (LinearLayout) findViewById(R.id.menu3);
+        LinearLayout menu4 = (LinearLayout) findViewById(R.id.menu4);
+        LinearLayout menu5 = (LinearLayout) findViewById(R.id.menu5);
+
+        menu1.setOnClickListener(this);
+        menu2.setOnClickListener(this);
+        menu3.setOnClickListener(this);
+        menu4.setOnClickListener(this);
+        menu5.setOnClickListener(this);
+
+        menu1.setOnTouchListener(this);
+        menu2.setOnTouchListener(this);
+        menu3.setOnTouchListener(this);
+        menu4.setOnTouchListener(this);
+        menu5.setOnTouchListener(this);
+
+        TextView tapToEnlarge = (TextView) findViewById(R.id.taptoenlarge);
+        tapToEnlarge.setOnTouchListener(this);
+
         updateUI();
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if (v.getId() == R.id.taptoenlarge) {
+            TextView t = (TextView) v;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                t.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorTOP));
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                t.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorLISTIcon));
+            }
+            return true;
+        } else {
+            LinearLayout l = (LinearLayout) v;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                l.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.colorTOP));
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                l.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.colorMENU));
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Log.d(LOG_TAG, "Inside onItemSelected: NEW POSITION =========== " + position);
+
+        int index = compiledAuthList.indexOf(selectedBuilding);
+        if (index == position) return;
+
+        selectedBuilding = compiledAuthList.get(position);
+        selectedBuildingId = Integer.parseInt(selectedBuilding.getBuildingId());
+        updateUI();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //Log.d(LOG_TAG, "NOTHING SELECTED");
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.menu3) {
+            IntentIntegrator integrator = new IntentIntegrator(this);
+            integrator.setOrientationLocked(false);
+            integrator.initiateScan();
+        } else {
+            Toast.makeText(v.getContext(), "Under Development", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        int tabLayoutWidth = mTabLayout.getWidth();
+
+        DisplayMetrics metrics = new DisplayMetrics();
+        LandingScreenActivity.this.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int deviceWidth = metrics.widthPixels;
+
+        if (tabLayoutWidth < deviceWidth) {
+            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        } else {
+            mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
+
+        /*// Checks the orientation of the screen for landscape and portrait
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+            mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }*/
+    }
+
+    public void updateUI() {
+        landingScreenLayout.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        fetchFloorplanAndAvailability();
+    }
+
+    @Override
+    public void updateFloorplan(FloorplanResponseV2 fr) {
+
+        FloorPlanDetailV2 f = fr.getFloorPlanDetails().get(0);
+
+        Log.d(LOG_TAG, "Fetching floor level... buildingID: " + selectedBuildingId + ", floorplanID: " + f.getFloorPlanId());
+        floorLevel = util.getFloorLevel(selectedBuildingId, f.getFloorPlanId().longValue());
+        Log.d(LOG_TAG, "Floor LEVEL = " + floorLevel);
+
+        floorNumberText.setText("Floor " + floorLevel);
+
+        Map<Integer, Integer> itemTypeIdMap = new HashMap<Integer, Integer>();
+        int i = 0;
+        for (ResponseOrgBasedItemType ri : fr.getResponseOrgBasedItemType()) {
+            itemTypeIdMap.put(ri.getItemTypeId(), i++);
+        }
+
+        locationsMap.clear();
+        for (ItemTypeDetailV2 itd : f.getItemTypeDetail()) {
+            locationsMap.put(itemTypeIdMap.get(itd.getItemTypeId()), itd.getImageLocation());
+        }
+
+        decodedString = null;
+        if (f.getFloorImage() != null && f.getFloorImage().length() > 0) {
+            String base64Image = f.getFloorImage();
+            decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+        } else {
+            try {
+                File floorplanFile = new File(Environment.getExternalStorageDirectory(),
+                        "Pictures/floorplan_" + selectedBuildingId + "_" + f.getFloorPlanId().intValue());
+                FileInputStream fis = new FileInputStream(floorplanFile);
+
+                decodedString = new byte[(int) (floorplanFile.length())];
+
+                fis.read(decodedString, 0, (int) (floorplanFile.length()));
+                fis.close();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+            }
+        }
+
+        if (decodedString != null) {
+            // Create the adapter that will return a fragment for each of the three
+            // primary sections of the activity.
+            Log.d(LOG_TAG, "Inside updateFloorplan(): decodedString.size() = " + decodedString.length);
+
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+            Log.d(LOG_TAG, "Image Width: " + decodedByte.getWidth());
+            Log.d(LOG_TAG, "Image Height: " + decodedByte.getHeight());
+
+            originalBitmapWidth = decodedByte.getWidth();
+            originalBitmapHeight = decodedByte.getHeight();
+
+            hotspotSize = Math.min(originalBitmapWidth, originalBitmapHeight) / 15.0f;
+
+            floorplan.setImageBitmap(decodedByte);
+
+            mTabLayout.getTabAt(0).select();
+            String locations = (locationsMap.get(0) == null) ? "" : locationsMap.get(0);
+            updateFloorplanWithHotspots(locations, itemTypeColors[0]);
+
+            landingScreenLayout.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        } else {
+            Toast.makeText(this, "Fatal Error... exiting!", Toast.LENGTH_LONG).show();
+            this.finish();
+        }
+
+    }
+
+    // Get the results:
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void updateFloorplanWithHotspots(String locations, int hotspotColor) {
+        Matrix matrix = new Matrix();
+        floorplan.getSuppMatrix(matrix);
+
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        Bitmap copyBitmap = decodedByte.copy(Bitmap.Config.ARGB_8888, true);
+
+        initHotspotData(locations);
+        printHotspotData();
+
+        drawHotspots(copyBitmap, hotspotColor);
+        floorplan.setImageBitmap(copyBitmap);
+
+        floorplan.setDisplayMatrix(matrix);
+
+        /*
+        if (hotspotCenters.size() > 0) {
+            float minX = Float.MAX_VALUE;
+            for (HotspotCenter c : hotspotCenters) {
+                if (c.x < minX) minX = c.x;
+            }
+
+            int x = (int) (minX * originalBitmapWidth);
+            floorplan.scrollTo(x, 0);
+        }*/
+    }
+
+    public void drawHotspots(Bitmap bMap, int hotspotColor) {
+
+        Canvas canvas = new Canvas();
+        canvas.setBitmap(bMap);
+
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setColor(ContextCompat.getColor(this, hotspotColor));
+        paint.setAlpha(140);
+
+        int bWidth = bMap.getWidth();
+        int bHeight = bMap.getHeight();
+
+        int halfSizeX = (int) (hotspotSize * bWidth / (2 * originalBitmapWidth));
+        int halfSizeY = (int) (hotspotSize * bHeight / (2 * originalBitmapHeight));
+
+        for (HotspotCenter c : hotspotCenters) {
+            int startX = (int) ((c.x) * bWidth);
+            int startY = (int) ((c.y) * bHeight);
+            canvas.drawRect(startX - halfSizeX, startY - halfSizeY, startX + halfSizeX, startY + halfSizeY, paint);
+        }
+    }
+
+    public void initHotspotData(String locations) {
+        if (hotspotCenters.size() > 0) {
+            hotspotCenters.removeAll(hotspotCenters);
+        }
+        if (locations.trim().length() == 0)
+            return;
+        String[] hotspotCoords = locations.split(",");
+        for (String coords : hotspotCoords) {
+            String[] xy = coords.split("_");
+            float x = (float) (Integer.parseInt(xy[0]) * 1.0 / originalBitmapWidth);
+            float y = (float) (Integer.parseInt(xy[1]) * 1.0 / originalBitmapHeight);
+            HotspotCenter c = new HotspotCenter(x, y);
+            hotspotCenters.add(c);
+        }
+    }
+
+    private void printHotspotData() {
+        Log.d(LOG_TAG, "HotspotSize = " + hotspotSize);
+        for (HotspotCenter c : hotspotCenters) {
+            Log.d(LOG_TAG, "Center: (" + c.x + ", " + c.y + ")");
+        }
     }
 
     private void fetchFloorplanAndAvailability() {
@@ -207,186 +470,5 @@ public class LandingScreenActivity extends AppCompatActivity
         }
         input.setFloorPlan(floorplanList);
         runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input, new Integer(selectedBuildingId));
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(LOG_TAG, "Inside onItemSelected: NEW POSITION =========== " + position);
-
-        int index = compiledAuthList.indexOf(selectedBuilding);
-        if (index == position) return;
-
-        selectedBuilding = compiledAuthList.get(position);
-        selectedBuildingId = Integer.parseInt(selectedBuilding.getBuildingId());
-        updateUI();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        //Log.d(LOG_TAG, "NOTHING SELECTED");
-    }
-
-    @Override
-    public void onClick(View v) {
-        IntentIntegrator integrator = new IntentIntegrator(this);
-        integrator.setOrientationLocked(false);
-        integrator.initiateScan();
-    }
-
-    public void updateUI() {
-        landingScreenLayout.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-        fetchFloorplanAndAvailability();
-    }
-
-    @Override
-    public void updateFloorplan(FloorplanResponseV2 fr) {
-
-        FloorPlanDetailV2 f = fr.getFloorPlanDetails().get(0);
-
-        Log.d(LOG_TAG, "Fetching floor level... buildingID: " + selectedBuildingId + ", floorplanID: " + f.getFloorPlanId());
-        floorLevel = util.getFloorLevel(selectedBuildingId, f.getFloorPlanId().longValue());
-        Log.d(LOG_TAG, "Floor LEVEL = " + floorLevel);
-
-        floorNumberText.setText("Floor " + floorLevel);
-
-        Map<Integer, Integer> itemTypeIdMap = new HashMap<Integer, Integer>();
-        int i = 0;
-        for (ResponseOrgBasedItemType ri : fr.getResponseOrgBasedItemType()) {
-            itemTypeIdMap.put(ri.getItemTypeId(), i++);
-        }
-
-        locationsMap.clear();
-        for (ItemTypeDetailV2 itd : f.getItemTypeDetail()) {
-            locationsMap.put(itemTypeIdMap.get(itd.getItemTypeId()), itd.getImageLocation());
-        }
-
-        decodedString = null;
-        if (f.getFloorImage() != null && f.getFloorImage().length() > 0) {
-            String base64Image = f.getFloorImage();
-            decodedString = Base64.decode(base64Image, Base64.DEFAULT);
-        }
-        else {
-            try {
-                File floorplanFile = new File(Environment.getExternalStorageDirectory(),
-                        "Pictures/floorplan_" + selectedBuildingId + "_" + f.getFloorPlanId().intValue());
-                FileInputStream fis = new FileInputStream(floorplanFile);
-
-                decodedString = new byte[(int) (floorplanFile.length())];
-
-                fis.read(decodedString, 0, (int) (floorplanFile.length()));
-                fis.close();
-            }
-            catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-        }
-
-        if (decodedString != null) {
-            // Create the adapter that will return a fragment for each of the three
-            // primary sections of the activity.
-            Log.d(LOG_TAG, "Inside updateFloorplan(): decodedString.size() = " + decodedString.length);
-
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-            Log.d(LOG_TAG, "Image Width: " + decodedByte.getWidth());
-            Log.d(LOG_TAG, "Image Height: " + decodedByte.getHeight());
-
-            originalBitmapWidth = decodedByte.getWidth();
-            originalBitmapHeight = decodedByte.getHeight();
-
-            hotspotSize = Math.min(originalBitmapWidth, originalBitmapHeight) / 15.0f;
-
-            floorplan.setImageBitmap(decodedByte);
-
-            mTabLayout.getTabAt(0).select();
-            String locations = (locationsMap.get(0) == null) ? "" : locationsMap.get(0);
-            updateFloorplanWithHotspots(locations, itemTypeColors[0]);
-
-            landingScreenLayout.setVisibility(View.VISIBLE);
-            progressBar.setVisibility(View.GONE);
-        }
-        else {
-            Toast.makeText(this, "Fatal Error... exiting!", Toast.LENGTH_LONG).show();
-            this.finish();
-        }
-
-    }
-
-    // Get the results:
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    private void updateFloorplanWithHotspots(String locations, int hotspotColor) {
-        Matrix matrix = new Matrix();
-        floorplan.getSuppMatrix(matrix);
-
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-
-        Bitmap copyBitmap = decodedByte.copy(Bitmap.Config.ARGB_8888, true);
-
-        initHotspotData(locations);
-        printHotspotData();
-
-        drawHotspots(copyBitmap, hotspotColor);
-        floorplan.setImageBitmap(copyBitmap);
-
-        floorplan.setDisplayMatrix(matrix);
-    }
-
-    public void drawHotspots(Bitmap bMap, int hotspotColor) {
-
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(bMap);
-
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(ContextCompat.getColor(this, hotspotColor));
-        paint.setAlpha(140);
-
-        int bWidth = bMap.getWidth();
-        int bHeight = bMap.getHeight();
-
-        int halfSizeX = (int) (hotspotSize*bWidth/(2*originalBitmapWidth));
-        int halfSizeY = (int) (hotspotSize*bHeight/(2*originalBitmapHeight));
-
-        for (HotspotCenter c : hotspotCenters) {
-            int startX = (int) ((c.x)*bWidth);
-            int startY = (int) ((c.y)*bHeight);
-            canvas.drawRect(startX-halfSizeX, startY-halfSizeY, startX+halfSizeX, startY+halfSizeY, paint);
-        }
-    }
-
-    public void initHotspotData(String locations) {
-        if (hotspotCenters.size() > 0) {
-            hotspotCenters.removeAll(hotspotCenters);
-        }
-        if (locations.trim().length() == 0)
-            return;
-        String[] hotspotCoords = locations.split(",");
-        for (String coords : hotspotCoords) {
-            String[] xy = coords.split("_");
-            float x = (float) (Integer.parseInt(xy[0])*1.0/originalBitmapWidth);
-            float y = (float) (Integer.parseInt(xy[1])*1.0/originalBitmapHeight);
-            HotspotCenter c = new HotspotCenter(x, y);
-            hotspotCenters.add(c);
-        }
-    }
-
-    private void printHotspotData() {
-        Log.d(LOG_TAG, "HotspotSize = " + hotspotSize);
-        for (HotspotCenter c : hotspotCenters) {
-            Log.d(LOG_TAG, "Center: (" + c.x + ", " + c.y + ")");
-        }
     }
 }

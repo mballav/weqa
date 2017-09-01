@@ -43,7 +43,14 @@ public class AuthAsyncTask extends AsyncTask<Object, String, String> {
         try {
             auth((AuthInput) params[0]);
         } catch (Exception e) {
-            Log.e(logTag, "Error in async task", e);
+            Log.d(logTag, "Error in async task " + e.getMessage());
+            final Context context = this.activity.getApplication();
+            this.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Please try again later!", Toast.LENGTH_LONG).show();
+                }
+            });
             return STATUS_FAILURE;
         }
         return STATUS_OK;
@@ -66,7 +73,14 @@ public class AuthAsyncTask extends AsyncTask<Object, String, String> {
             Log.d(logTag, "Auth response received!");
         }
         catch (IOException ioe) {
-            Log.e(logTag, "Error in retrofit call" + ioe.getMessage());
+            Log.d(logTag, "Error in retrofit call" + ioe.getMessage());
+            final Context context = this.activity.getApplication();
+            this.activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Connectivity Problem. Please try again later!", Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 

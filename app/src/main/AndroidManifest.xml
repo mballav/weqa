@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.SplashScreenActivity">
+        <activity android:name=".ui.SplashScreenActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +29,8 @@
         <activity
             android:name=".ui.FloorPlanActivity"></activity>
         <activity android:name=".ui.TestActivity"></activity>
-        <activity android:name=".ui.LandingScreenActivity">
+        <activity android:name=".ui.LandingScreenActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
         </activity>
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
