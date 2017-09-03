@@ -20,7 +20,7 @@ public class QRCodeUtil {
 
     private static SimpleDateFormat QR_DATE_FORMAT = new SimpleDateFormat("yyyyMMddhh:mm:ss");
 
-    private static double BUILDING_RADIUS = 100;
+    private static double BUILDING_RADIUS = 500;
 
     private SharedPreferencesUtil util;
     private Context context;
@@ -38,8 +38,8 @@ public class QRCodeUtil {
             return false;
 
         String codeType = tokens[0];
-        long buildingId = Long.parseLong(tokens[1]);
-        long floorplanId = Long.parseLong(tokens[2]);
+        long orgId = Long.parseLong(tokens[1]);
+        long buildingId = Long.parseLong(tokens[2]);
 
         Date qrDate = null;
         try {
@@ -50,29 +50,39 @@ public class QRCodeUtil {
             return false;
         }
 
-        if (!isBuildingFloorValid(buildingId, floorplanId))
+        if (!isBuildingFloorValid(orgId, buildingId))
             return false;
-        if (!inVicinityOfBuilding(buildingId, floorplanId))
+        if (!inVicinityOfBuilding(buildingId))
             return false;
 
         return true;
     }
 
-    private boolean isBuildingFloorValid(long buildingId, long floorplanId) {
+    /**
+     * Validates if orgId and buildingId are part of the authentication information
+     * for the user.
+     *
+     * @param orgId
+     * @param buildingId
+     * @return
+     */
+    private boolean isBuildingFloorValid(long orgId, long buildingId) {
+
+        List<Long> orgIdList = this.util.getOrganizationIdList();
+        if (!orgIdList.contains(orgId))
+            return false;
+
         List<Authorization> authList = this.util.getAuthorizationInfo(buildingId);
-        boolean floorFound = false;
-        for (Authorization a : authList) {
-            if (Long.parseLong(a.getFloorPlanId()) == floorplanId) {
-                floorFound = true;
-                latitude = Double.parseDouble(a.getLatitude());
-                longitude = Double.parseDouble(a.getLongitude());
-                break;
-            }
+        if (authList.size() == 0)
+            return false;
+        else {
+            latitude = Double.parseDouble(authList.get(0).getLatitude());
+            longitude = Double.parseDouble(authList.get(0).getLongitude());
+            return true;
         }
-        return floorFound;
     }
 
-    private boolean inVicinityOfBuilding(long buildingId, long floorplanId) {
+    private boolean inVicinityOfBuilding(long buildingId) {
 
         LocationTracker tracker = new LocationTracker(context);
         // check if location is available

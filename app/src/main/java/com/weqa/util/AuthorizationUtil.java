@@ -29,8 +29,8 @@ public class AuthorizationUtil {
     }
 
     public static String getBuildingDisplayName(Authorization a) {
-        String bName = a.getBuildingName() + ", " + a.getAddress();
-        if (bName.length() > 30) bName = bName.substring(0, 30) + "...";
+        String bName = a.getAddress();
+        //if (bName.length() > 30) bName = bName.substring(0, 30) + "...";
         return bName;
     }
 }

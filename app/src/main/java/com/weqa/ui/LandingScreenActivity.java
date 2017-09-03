@@ -1,5 +1,6 @@
 package com.weqa.ui;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -21,8 +22,11 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -33,7 +37,11 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.weqa.R;
+import com.weqa.model.AuthInput;
 import com.weqa.model.Authorization;
+import com.weqa.model.BookingInput;
+import com.weqa.model.BookingReleaseInput;
+import com.weqa.model.BookingResponse;
 import com.weqa.model.CodeConstants;
 import com.weqa.model.FloorPlan;
 import com.weqa.model.FloorPlanDetailV2;
@@ -44,9 +52,15 @@ import com.weqa.model.ItemTypeDetailV2;
 import com.weqa.model.ResponseOrgBasedItemType;
 import com.weqa.service.InstanceIdService;
 import com.weqa.service.RetrofitBuilder;
+import com.weqa.util.AuthAsyncTask;
 import com.weqa.util.AuthorizationUtil;
+import com.weqa.util.BookingAsyncTask;
+import com.weqa.util.BookingReleaseAsyncTask;
 import com.weqa.util.BuildingUtil;
+import com.weqa.util.DatetimeUtil;
+import com.weqa.util.DialogUtil;
 import com.weqa.util.FloorplanV2AsyncTask;
+import com.weqa.util.QRCodeUtil;
 import com.weqa.util.SharedPreferencesUtil;
 import com.weqa.util.UIHelper;
 import com.weqa.widget.SearchableSpinner;
@@ -66,7 +80,8 @@ import retrofit2.Retrofit;
 
 public class LandingScreenActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener,
-        FloorplanV2AsyncTask.UpdateFloorplan, AdapterView.OnItemSelectedListener {
+        FloorplanV2AsyncTask.UpdateFloorplan, AdapterView.OnItemSelectedListener,
+        BookingAsyncTask.OnShowBookingResponse, BookingReleaseAsyncTask.OnShowBookingReleaseResponse {
 
     private static String LOG_TAG = "WEQA-LOG";
 
@@ -97,6 +112,8 @@ public class LandingScreenActivity extends AppCompatActivity
     int originalBitmapWidth, originalBitmapHeight;
     float hotspotSize;
     List<HotspotCenter> hotspotCenters = new ArrayList<HotspotCenter>();
+
+    private static String TEST_QR_CODE = "2,1,1,2017-09-02 00:00:40";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -357,10 +374,61 @@ public class LandingScreenActivity extends AppCompatActivity
             if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                String qrCode = result.getContents();
+                QRCodeUtil qrCodeUtil = new QRCodeUtil(util, this);
+                if (qrCodeUtil.isQRCodeValid(qrCode)) {
+                    bookQRCodeItem(qrCode);
+                }
+                else {
+                    DialogUtil.showOkDialog(this, "Invalid QR Code!");
+                }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void bookQRCodeItem(String qrCode) {
+        Retrofit retrofit = RetrofitBuilder.getRetrofit();
+
+        BookingInput input = new BookingInput("AS101", qrCode);
+        Log.d(LOG_TAG, "Calling the API to book...");
+        BookingAsyncTask runner = new BookingAsyncTask(retrofit, LOG_TAG, this);
+        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
+        Log.d(LOG_TAG, "Waiting for response...");
+    }
+
+    public void releaseQRCodeItem(String qrCode) {
+        Retrofit retrofit = RetrofitBuilder.getRetrofit();
+
+        BookingReleaseInput input = new BookingReleaseInput(CodeConstants.AC301, "MB101", qrCode);
+        Log.d(LOG_TAG, "Calling the API to release...");
+        BookingReleaseAsyncTask runner = new BookingReleaseAsyncTask(retrofit, LOG_TAG, this);
+        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
+        Log.d(LOG_TAG, "Waiting for response...");
+    }
+
+    @Override
+    public void showBookingResponse(BookingResponse br, String qrCode) {
+        // set the custom dialog components - text, image and button
+        if (br.getActionCode().equals(CodeConstants.RC301))
+            DialogUtil.showOkDialogWithCancel(this,
+                    "Desk successfully booked until " + DatetimeUtil.getLocalDateTime(br.getBookedTime()),
+                    qrCode);
+        else if (br.getActionCode().equals(CodeConstants.RC401)) {
+            DialogUtil.showOkDialog(this,
+                    "This desk has already been booked until " + DatetimeUtil.getLocalDateTime(br.getBookedTime()));
+        }
+        else if (br.getActionCode().equals(CodeConstants.RC501)) {
+            DialogUtil.showOkDialog(this, "You have booked a desk already!");
+        }
+    }
+
+
+    @Override
+    public void showBookingReleaseResponse(BookingResponse br) {
+        if (br.getActionCode().equals(CodeConstants.RC601)) {
+            DialogUtil.showOkDialog(this, "Booking canceled!");
         }
     }
 

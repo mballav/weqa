@@ -4,6 +4,9 @@ import com.weqa.model.AuthInput;
 import com.weqa.model.AuthResponse;
 import com.weqa.model.Availability;
 import com.weqa.model.AvailabilityInput;
+import com.weqa.model.BookingInput;
+import com.weqa.model.BookingReleaseInput;
+import com.weqa.model.BookingResponse;
 import com.weqa.model.FloorplanImage;
 import com.weqa.model.FloorplanImageInput;
 import com.weqa.model.FloorplanInput;
@@ -38,4 +41,9 @@ public interface AuthService {
     @POST("api/security/Item")
     Call<FloorplanResponseV2> floorplanV2(@Body FloorplanInputV2 input);
 
+    @POST("api/security/BookRelease")
+    Call<BookingResponse> book(@Body BookingInput input);
+
+    @POST("api/security/BookRelease")
+    Call<BookingResponse> bookRelease(@Body BookingReleaseInput input);
 }

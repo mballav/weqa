@@ -11,6 +11,7 @@ import com.weqa.model.Authentication;
 import com.weqa.model.Authorization;
 import com.weqa.model.Availability;
 import com.weqa.model.Configuration;
+import com.weqa.model.Org;
 
 import java.security.MessageDigest;
 import java.text.DateFormat;
@@ -146,13 +147,31 @@ public class SharedPreferencesUtil {
         addConfigurationInfo(token.getConfiguration());
     }
 
+    public List<Long> getOrganizationIdList() {
+        spAuthentication = context.getSharedPreferences(AUTHENTICATION_FILENAME, Context.MODE_PRIVATE);
+        String orgListJson = spAuthentication.getString(Authentication.ORG_INFO, null);
+        List<Long> orgIdList = new ArrayList<Long>();
+        if (orgListJson != null) {
+            Gson gson = new Gson();
+            List<Org> orgList = gson.fromJson(orgListJson,
+                    new TypeToken<List<Org>>() {
+                    }.getType()); // myObject - instance of MyObject
+            for (Org o : orgList) {
+                orgIdList.add(o.getOrganizationId().longValue());
+            }
+        }
+        return orgIdList;
+    }
+
     private void addAuthenticationInfo(Authentication authentication) {
         if (authentication != null) {
             SharedPreferences.Editor editor = spAuthentication.edit();
             editor.putString(Authentication.EMPLOYEE_NAME, authentication.getEmployeeName());
             editor.putString(Authentication.EMPLOYEE_MOBILE, authentication.getMobileNo());
-            List<String> orgList = authentication.getOrganization();
-            editor.putString(Authentication.ORG_INFO, orgList.toString());
+            List<Org> orgList = authentication.getOrganization();
+            Gson gson = new Gson();
+            String json = gson.toJson(orgList); // myObject - instance of MyObject
+            editor.putString(Authentication.ORG_INFO, json);
             editor.putString(Authentication.AUTH_TIME, getCurrentDate());
             Log.d("SPLASH", "User: " + authentication.getEmployeeName() + " authenticated!");
             editor.commit();

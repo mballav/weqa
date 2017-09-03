@@ -16,11 +16,16 @@ public interface CodeConstants {
 
     public static final String AC101 = "AC101";
     public static final String AC201 = "AC201";
+    public static final String AC301 = "AC301";
 
     public static final String RC10 = "RC10";
     public static final String RC20 = "RC20";
     public static final String RC30 = "RC30";
     public static final String RC40 = "RC40";
     public static final String RC50 = "RC50";
+    public static final String RC301 = "RC301";
+    public static final String RC401 = "RC401";
+    public static final String RC501 = "RC501";
+    public static final String RC601 = "RC601";
 
 }

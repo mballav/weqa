@@ -146,30 +146,29 @@
                 app:civ_border_color="@color/colorTABtextSelected"
                 app:civ_border_width="1dp" />
 
-<!--            <TextView
-                android:id="@+id/searchbar"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
+                android:layout_marginStart="60dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginEnd="50dp"
-                android:layout_marginStart="70dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/search_bar_rectangle_white"
-                android:text=" "
-                android:textSize="18sp" /> -->
+                android:layout_marginTop="15dp"
+                android:src="@drawable/search_icon"
+                />
 
             <com.weqa.widget.SearchableSpinner
                 android:id="@+id/spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="75dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="50dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="11dp"
-                android:layout_centerHorizontal="true"
+                android:layout_marginTop="13dp"
                 android:entries="@array/planets"
-                app:hintTextColor="@color/colorWhite"
-                app:searchBackgroundColor="@color/colorWhite"/>
+                app:searchBackgroundColor="@color/colorTOP"/>
 
         </RelativeLayout>
 

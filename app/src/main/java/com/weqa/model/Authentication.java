@@ -20,9 +20,9 @@ public class Authentication {
     @SerializedName("employeeName")
     @Expose
     private String employeeName;
-    @SerializedName("organization")
+    @SerializedName("org")
     @Expose
-    private List<String> organization = null;
+    private List<Org> org = null;
     @SerializedName("privilege")
     @Expose
     private List<String> privilege = null;
@@ -37,15 +37,15 @@ public class Authentication {
     }
 
     /**
-     * @param organization
+     * @param orgList
      * @param privilege
      * @param mobileNo
      * @param employeeName
      */
-    public Authentication(String employeeName, List<String> organization, List<String> privilege, String mobileNo) {
+    public Authentication(String employeeName, List<Org> orgList, List<String> privilege, String mobileNo) {
         super();
         this.employeeName = employeeName;
-        this.organization = organization;
+        this.org = orgList;
         this.privilege = privilege;
         this.mobileNo = mobileNo;
     }
@@ -58,12 +58,12 @@ public class Authentication {
         this.employeeName = employeeName;
     }
 
-    public List<String> getOrganization() {
-        return organization;
+    public List<Org> getOrganization() {
+        return org;
     }
 
-    public void setOrganization(List<String> organization) {
-        this.organization = organization;
+    public void setOrganization(List<Org> organization) {
+        this.org = organization;
     }
 
     public List<String> getPrivilege() {

@@ -45,7 +45,7 @@ public class SearchableSpinner extends AppCompatSpinner implements View.OnTouchL
         this._context = context;
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SearchableSpinner);
         _strHintText = a.getString(R.styleable.SearchableSpinner_hintText);
-        _mSearchBackgroundColor = a.getColor(R.styleable.SearchableSpinner_searchBackgroundColor, Color.WHITE);
+//        _mSearchBackgroundColor = a.getColor(R.styleable.SearchableSpinner_searchBackgroundColor, Color.WHITE);
         a.recycle();
         init();
     }
