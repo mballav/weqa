@@ -66,6 +66,7 @@ import com.weqa.util.BuildingUtil;
 import com.weqa.util.DatetimeUtil;
 import com.weqa.util.DialogUtil;
 import com.weqa.util.FloorplanV2AsyncTask;
+import com.weqa.util.GlobalExceptionHandler;
 import com.weqa.util.QRCodeUtil;
 import com.weqa.util.SharedPreferencesUtil;
 import com.weqa.util.UIHelper;
@@ -132,6 +133,7 @@ public class LandingScreenActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler(this));
         setContentView(R.layout.activity_landing_screen);
 
         fontAwesome = Typeface.createFromAsset(this.getAssets(), "font/fontawesome-webfont.ttf");

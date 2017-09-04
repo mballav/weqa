@@ -15,6 +15,7 @@ import com.weqa.model.CodeConstants;
 import com.weqa.service.InstanceIdService;
 import com.weqa.service.RetrofitBuilder;
 import com.weqa.util.AuthAsyncTask;
+import com.weqa.util.GlobalExceptionHandler;
 
 import retrofit2.Retrofit;
 
@@ -37,6 +38,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new GlobalExceptionHandler(this));
         setContentView(R.layout.activity_splash_screen);
 
         if (android.os.Build.VERSION.SDK_INT < 21) {
