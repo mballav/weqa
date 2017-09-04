@@ -18,7 +18,7 @@ public class QRCodeUtil {
 
     private static String LOG_TAG = "WEQA-LOG";
 
-    private static SimpleDateFormat QR_DATE_FORMAT = new SimpleDateFormat("yyyyMMddhh:mm:ss");
+    private static SimpleDateFormat QR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     private static double BUILDING_RADIUS = 500;
 
@@ -50,10 +50,16 @@ public class QRCodeUtil {
             return false;
         }
 
-        if (!isBuildingFloorValid(orgId, buildingId))
+        if (!isBuildingFloorValid(orgId, buildingId)) {
+            Log.d(LOG_TAG, "---------------------------Failed the authorization test!");
             return false;
-        if (!inVicinityOfBuilding(buildingId))
+        }
+        Log.d(LOG_TAG, "---------------------------Passed the authorization test!");
+        if (!inVicinityOfBuilding(buildingId)) {
+            Log.d(LOG_TAG, "---------------------------Failed the latitude longitude test!");
             return false;
+        }
+        Log.d(LOG_TAG, "---------------------------Passed the latitude longitude test!");
 
         return true;
     }

@@ -7,7 +7,8 @@
     <RelativeLayout
         android:id="@+id/landingScreenContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorTOP">
 
         <LinearLayout
             android:id="@+id/bottomPanel"
@@ -126,86 +127,124 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/topPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:background="@color/colorTOP"
-            android:paddingBottom="4dp">
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profilepicture"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/userimg"
-                app:civ_border_color="@color/colorTABtextSelected"
-                app:civ_border_width="1dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="60dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/search_icon"
-                />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profilepicture"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/userimg"
+                    app:civ_border_color="@color/colorTABtextSelected"
+                    app:civ_border_width="1dp" />
 
-            <com.weqa.widget.SearchableSpinner
-                android:id="@+id/spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="75dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="50dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="13dp"
-                android:entries="@array/planets"
-                app:searchBackgroundColor="@color/colorTOP"/>
+            </LinearLayout>
 
-        </RelativeLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8"
+                android:gravity="left"
+                android:orientation="vertical">
+
+                <com.weqa.widget.SearchableSpinner
+                    android:id="@+id/spinner"
+                    style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/planets"
+                    app:searchBackgroundColor="@color/colorTOP" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/bottomPanel"
             android:layout_below="@id/topPanel"
+            android:layout_above="@id/bottomPanel"
             android:orientation="vertical">
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/sliding_tabs"
                 style="@style/MyCustomTabLayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:background="@color/colorLighterGrey" />
 
-            <com.github.chrisbanes.photoview.PhotoView
-                android:id="@+id/floorplan"
+            <RelativeLayout
+                android:id="@+id/progressBarContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/sliding_tabs"
                 android:layout_alignParentBottom="true"
-                android:scaleType="centerCrop" />
+                >
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:indeterminateDrawable="@drawable/progress"></ProgressBar>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/listContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/sliding_tabs"
+                android:layout_alignParentBottom="true"
+                >
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/availabilityList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+
+            </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/mapViewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_below="@id/sliding_tabs"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp">
+                android:layout_alignParentBottom="true"
+                >
+
+                <com.github.chrisbanes.photoview.PhotoView
+                    android:id="@+id/floorplan"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:scaleType="fitXY" />
 
                 <TextView
                     android:id="@+id/floorNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="30dp"
                     android:background="@drawable/floorplan_number_rectangle"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
@@ -214,66 +253,56 @@
                     android:text="Floor 1"
                     android:textColor="@color/colorTABtextSelected" />
 
-                <RelativeLayout
+                <!--                <RelativeLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_toRightOf="@id/floorNumber"
+                                    android:background="@drawable/search_bar_rectangle_white_no_border"
+                                    android:paddingBottom="5dp"
+                                    android:paddingLeft="10dp"
+                                    android:paddingRight="10dp"
+                                    android:paddingTop="5dp">
+
+                                    <ImageView
+                                        android:id="@+id/listicon"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentStart="true"
+                                        android:layout_alignParentTop="true"
+                                        android:src="@drawable/list_16_blue" />
+
+                                    <TextView
+                                        android:id="@+id/listicontext"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentTop="true"
+                                        android:layout_marginLeft="5dp"
+                                        android:layout_toRightOf="@id/listicon"
+                                        android:text="List"
+                                        android:textColor="@color/colorLISTIcon" />
+
+                                </RelativeLayout>-->
+
+                <TextView
+                    android:id="@+id/taptoenlarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_toRightOf="@id/floorNumber"
-                    android:background="@drawable/search_bar_rectangle_white_no_border"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rectangle_white_no_border"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:paddingTop="5dp">
-
-                    <ImageView
-                        android:id="@+id/listicon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:src="@drawable/list_16_blue" />
-
-                    <TextView
-                        android:id="@+id/listicontext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@id/listicon"
-                        android:text="List"
-                        android:textColor="@color/colorLISTIcon" />
-
-                </RelativeLayout>
+                    android:paddingTop="5dp"
+                    android:text="Switch to Floor List"
+                    android:textColor="@color/colorLISTIcon" />
 
             </RelativeLayout>
-
-            <TextView
-                android:id="@+id/taptoenlarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/rectangle_white_no_border"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:text="Tap to enlarge"
-                android:textColor="@color/colorLISTIcon" />
 
         </RelativeLayout>
 
     </RelativeLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminateDrawable="@drawable/progress"
-        android:visibility="gone"></ProgressBar>
 
 </RelativeLayout>
