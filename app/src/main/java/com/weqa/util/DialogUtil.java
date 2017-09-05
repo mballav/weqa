@@ -21,6 +21,7 @@ public class DialogUtil {
         private Dialog dialog;
         private boolean refreshHotspots;
         private LandingScreenActivity activity;
+        public boolean buttonPressed = false;
 
         public Timer(Dialog dialog, boolean refreshHotspots, LandingScreenActivity activity) {
             this.dialog = dialog;
@@ -36,8 +37,13 @@ public class DialogUtil {
                     Thread.sleep(5000); // 5 seconds timer
                     if (dialog.isShowing())
                         dialog.dismiss();
-                    if (refreshHotspots)  {
-                        activity.updateFloorplanAvailability();
+                    if (refreshHotspots && (!buttonPressed))  {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                activity.updateFloorplanAvailability();
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -49,15 +55,17 @@ public class DialogUtil {
     public static class Timer2 {
 
         private Dialog dialog;
-        private boolean refreshHotspots;
+        private boolean refreshHotspots, removeLocalBooking;
         private LandingScreenActivity activity;
         private String qrCodeBooked, qrCodeNew;
         private String bookingTime;
+        public boolean buttonPressed = false;
 
-        public Timer2(Dialog dialog, boolean refreshHotspots, LandingScreenActivity activity,
+        public Timer2(Dialog dialog, boolean refreshHotspots, boolean removeLocalBooking, LandingScreenActivity activity,
                       String qrCodeBooked, String qrCodeNew, String bookingTime) {
             this.dialog = dialog;
             this.refreshHotspots = refreshHotspots;
+            this.removeLocalBooking = removeLocalBooking;
             this.activity = activity;
             this.qrCodeBooked = qrCodeBooked;
             this.qrCodeNew = qrCodeNew;
@@ -72,9 +80,11 @@ public class DialogUtil {
                     Thread.sleep(5000); // 5 seconds timer
                     if (dialog.isShowing())
                         dialog.dismiss();
-                    SharedPreferencesUtil util = new SharedPreferencesUtil(activity);
-                    util.addBooking(qrCodeNew, bookingTime);
-                    activity.releaseQRCodeItem(qrCodeBooked);
+                    if (!buttonPressed) {
+                        SharedPreferencesUtil util = new SharedPreferencesUtil(activity);
+                        util.addBooking(qrCodeNew, bookingTime);
+                        activity.releaseQRCodeItem(qrCodeBooked, false, removeLocalBooking);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -92,13 +102,17 @@ public class DialogUtil {
         TextView text = (TextView) dialog.findViewById(R.id.bookingmessage);
         text.setText(textToDisplay);
 
+        // start the timer
+        final DialogUtil.Timer timer = new DialogUtil.Timer(dialog, refreshHotspots, activity);
+
         Button cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
         // if button is clicked, close the custom dialog
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timer.buttonPressed = true;
                 dialog.dismiss();
-                activity.releaseQRCodeItem(qrCode);
+                activity.releaseQRCodeItem(qrCode, true, true);
             }
         });
         cancelButton.setText("Release");
@@ -109,6 +123,7 @@ public class DialogUtil {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timer.buttonPressed = true;
                 dialog.dismiss();
                 if (refreshHotspots) {
                     activity.updateFloorplanAvailability();
@@ -116,14 +131,12 @@ public class DialogUtil {
             }
         });
 
-        // start the timer
-        new DialogUtil.Timer(dialog, refreshHotspots, activity);
-
         dialog.show();
     }
 
     public static void showOkDialogWithCancelForSecondBooking(final LandingScreenActivity activity, String textToDisplay,
-                                                              final String qrCodeOld, final String qrCodeNew, final String bookingTime) {
+                                                              final String qrCodeOld, final String qrCodeNew,
+                                                              final String bookingTime, final boolean refreshHotspots) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_booking);
@@ -132,14 +145,19 @@ public class DialogUtil {
         TextView text = (TextView) dialog.findViewById(R.id.bookingmessage);
         text.setText(textToDisplay);
 
+
+        // start the timer
+        final DialogUtil.Timer2 timer2 = new DialogUtil.Timer2(dialog, refreshHotspots, false, activity, qrCodeOld, qrCodeNew, bookingTime);
+
         Button cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
         cancelButton.setText("Release");
         // if button is clicked, close the custom dialog
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timer2.buttonPressed = true;
                 dialog.dismiss();
-                activity.releaseQRCodeItem(qrCodeNew);
+                activity.releaseQRCodeItem(qrCodeNew, false, false);
             }
         });
 
@@ -149,21 +167,22 @@ public class DialogUtil {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timer2.buttonPressed = true;
                 dialog.dismiss();
                 SharedPreferencesUtil util = new SharedPreferencesUtil(activity);
                 util.addBooking(qrCodeNew, bookingTime);
-                activity.releaseQRCodeItem(qrCodeOld);
+                activity.releaseQRCodeItem(qrCodeOld, false, false);
+                if (refreshHotspots) {
+                    activity.updateFloorplanAvailability();
+                }
             }
         });
-
-        // start the timer
-        new DialogUtil.Timer2(dialog, true, activity, qrCodeOld, qrCodeNew, bookingTime);
 
         dialog.show();
     }
 
     public static void showOkDialog(final LandingScreenActivity activity, String textToDisplay,
-                                    final boolean refreshHotspots, boolean doTimer) {
+                                    final boolean refreshHotspots, final boolean doTimer) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_booking);
@@ -171,6 +190,7 @@ public class DialogUtil {
         // set the custom dialog components - text, image and button
         TextView text = (TextView) dialog.findViewById(R.id.bookingmessage);
         text.setText(textToDisplay);
+
 
         Button cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
         cancelButton.setVisibility(View.GONE);
@@ -178,26 +198,38 @@ public class DialogUtil {
         Button okButton = (Button) dialog.findViewById(R.id.okButton);
         // if button is clicked, close the custom dialog
         okButton.setText("Close");
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                if (refreshHotspots) {
-                    activity.updateFloorplanAvailability();
-                }
-            }
-        });
-
         if (doTimer) {
             // start the timer
-            new DialogUtil.Timer(dialog, refreshHotspots, activity);
+            final DialogUtil.Timer timer = new DialogUtil.Timer(dialog, refreshHotspots, activity);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    timer.buttonPressed = true;
+                    dialog.dismiss();
+                    if (refreshHotspots) {
+                        activity.updateFloorplanAvailability();
+                    }
+                }
+            });
         }
+        else {
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    if (refreshHotspots) {
+                        activity.updateFloorplanAvailability();
+                    }
+                }
+            });
+        }
+
         dialog.show();
     }
 
 
     public static void showDialogWithThreeButtons(final LandingScreenActivity activity, String textToDisplay,
-                                              final String qrCode) {
+                                              final String qrCode, final boolean refreshHotspots) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_booking_3buttons);
@@ -213,7 +245,10 @@ public class DialogUtil {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                activity.releaseQRCodeItem(qrCode);
+                activity.releaseQRCodeItem(qrCode, true, true);
+                if (refreshHotspots) {
+                    activity.updateFloorplanAvailability();
+                }
             }
         });
 

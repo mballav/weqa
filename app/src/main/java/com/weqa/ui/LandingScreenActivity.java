@@ -371,6 +371,9 @@ public class LandingScreenActivity extends AppCompatActivity
             availData = new AvailListData(fr, util, selectedBuildingId);
             buildingChanged = false;
         }
+        else {
+            availData.update(fr);
+        }
         List<AvailListItem> items = availData.getListData(fr.getResponseOrgBasedItemType().get(0).getItemTypeId());
         AvailListAdapter adapter = new AvailListAdapter(items, this, this);
         availList.setAdapter(adapter);
@@ -470,14 +473,13 @@ public class LandingScreenActivity extends AppCompatActivity
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-/*                QRCodeUtil qrCodeUtil = new QRCodeUtil(util, this);
-                if (qrCodeUtil.isQRCodeValid(TEST_QR_CODE_3)) {
-                    bookQRCodeItem(TEST_QR_CODE_3);
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();QRCodeUtil qrCodeUtil = new QRCodeUtil(util, this);
+                if (qrCodeUtil.isQRCodeValid(TEST_QR_CODE)) {
+                    bookQRCodeItem(TEST_QR_CODE);
                 }
                 else {
                     DialogUtil.showOkDialog(this, "Invalid QR Code! Code: " + TEST_QR_CODE, false, false);
-                } */
+                }
             } else {
                 String qrCode = result.getContents();
                 QRCodeUtil qrCodeUtil = new QRCodeUtil(util, this);
@@ -510,19 +512,22 @@ public class LandingScreenActivity extends AppCompatActivity
             BookingReleaseInput input = new BookingReleaseInput(CodeConstants.AC601, InstanceIdService.getAppInstanceId(this), qrCode);
             Log.d(LOG_TAG, "Calling the API to release...");
             BookingReleaseAsyncTask runner = new BookingReleaseAsyncTask(retrofit, LOG_TAG, this);
-            runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
+            runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input, new Boolean(true), new Boolean(false));
             Log.d(LOG_TAG, "Waiting for response...");
         }
 
     }
 
-    public void releaseQRCodeItem(String qrCode) {
+    public void releaseQRCodeItem(String qrCode, boolean showConfirmation, boolean removeLocalBooking) {
         Retrofit retrofit = RetrofitBuilder.getRetrofit();
 
         BookingReleaseInput input = new BookingReleaseInput(CodeConstants.AC301, InstanceIdService.getAppInstanceId(this), qrCode);
         Log.d(LOG_TAG, "Calling the API to release...");
         BookingReleaseAsyncTask runner = new BookingReleaseAsyncTask(retrofit, LOG_TAG, this);
-        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
+        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                                input,
+                                new Boolean(showConfirmation),
+                                new Boolean(removeLocalBooking));
         Log.d(LOG_TAG, "Waiting for response...");
     }
 
@@ -547,12 +552,15 @@ public class LandingScreenActivity extends AppCompatActivity
 
     @Override
     public void showBookingResponse(BookingResponse br, String qrCode) {
+
+        boolean refreshFloorplan = false;
+        Log.d(LOG_TAG, "Building ID from qrCode: " + QRCodeUtil.getBuildingId(qrCode) + ", SelectedBuildingId: " + selectedBuildingId);
+        if (QRCodeUtil.getBuildingId(qrCode) == selectedBuildingId) {
+            refreshFloorplan = true;
+        }
+
         // set the custom dialog components - text, image and button
         if (br.getActionCode().equals(CodeConstants.RC301)) {
-            boolean refreshFloorplan = false;
-            if (QRCodeUtil.getBuildingId(qrCode) == selectedBuildingId) {
-                refreshFloorplan = true;
-            }
             DialogUtil.showOkDialogWithCancel(this,
                     "Desk is successfully booked for next " + DatetimeUtil.getTimeDifference(br.getBookedTime()),
                     qrCode, refreshFloorplan);
@@ -565,15 +573,18 @@ public class LandingScreenActivity extends AppCompatActivity
         // If user has booked the same qrCode before and has scanned the same qrCode again.
         else if (br.getActionCode().equals(CodeConstants.RC501)) {
             String message = "You still have " + DatetimeUtil.getTimeDifference(br.getBookedTime()) + " remaining on this booking";
-            DialogUtil.showDialogWithThreeButtons(this, message, qrCode);
+            DialogUtil.showDialogWithThreeButtons(this, message, qrCode, refreshFloorplan);
         }
     }
 
     @Override
-    public void showBookingReleaseResponse(BookingResponse br, String qrCode) {
+    public void showBookingReleaseResponse(BookingResponse br, String qrCode,
+                                           boolean showConfirmation, boolean removeLocalBooking) {
         if (br.getActionCode().equals(CodeConstants.RC601)) {
-            DialogUtil.showOkDialog(this, "Desk is now released!", false, false);
-            util.removeBooking();
+            if (showConfirmation)
+                DialogUtil.showOkDialog(this, "Desk is now released!", false, false);
+            if (removeLocalBooking)
+                util.removeBooking();
         } else if (br.getActionCode().equals(CodeConstants.RC401)) {
             String message = "Desk is not available - " + DatetimeUtil.getTimeDifference(br.getBookedTime())
                     + " remaining on current booking.";
@@ -583,7 +594,13 @@ public class LandingScreenActivity extends AppCompatActivity
         else if (br.getActionCode().equals(CodeConstants.RC701)) {
             String qrCodeOld = util.getBookingQRCode();
             String message = "Desk is successfully booked for next " + DatetimeUtil.getTimeDifference(br.getBookedTime());
-            DialogUtil.showOkDialogWithCancelForSecondBooking(this, message, qrCodeOld, qrCode, br.getBookedTime());
+
+            boolean refreshFloorplan = false;
+            Log.d(LOG_TAG, "Building ID from qrCode: " + QRCodeUtil.getBuildingId(qrCode) + ", SelectedBuildingId: " + selectedBuildingId);
+            if (QRCodeUtil.getBuildingId(qrCode) == selectedBuildingId) {
+                refreshFloorplan = true;
+            }
+            DialogUtil.showOkDialogWithCancelForSecondBooking(this, message, qrCodeOld, qrCode, br.getBookedTime(), refreshFloorplan);
         }
         // If user has already booked two desks, new booking is not allowed
         else if (br.getActionCode().equals(CodeConstants.RC801)) {

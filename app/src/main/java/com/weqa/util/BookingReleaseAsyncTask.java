@@ -24,7 +24,8 @@ import retrofit2.Retrofit;
 public class BookingReleaseAsyncTask extends AsyncTask<Object, String, String> {
 
     public static interface OnShowBookingReleaseResponse {
-        public void showBookingReleaseResponse(BookingResponse br, String qrCode);
+        public void showBookingReleaseResponse(BookingResponse br, String qrCode,
+                                               boolean showConfirmation, boolean removeLocalBooking);
     }
 
     public static final String STATUS_OK = "ok";
@@ -37,6 +38,8 @@ public class BookingReleaseAsyncTask extends AsyncTask<Object, String, String> {
     private SharedPreferencesUtil util;
 
     private String qrCode;
+    private boolean showConfirmation;
+    private boolean removeLocalBooking;
 
     public BookingReleaseAsyncTask(Retrofit retrofit, String logTAG, Activity activity) {
         this.retrofit = retrofit;
@@ -48,6 +51,8 @@ public class BookingReleaseAsyncTask extends AsyncTask<Object, String, String> {
     @Override
     protected String doInBackground(Object... params) {
         try {
+            this.showConfirmation = (Boolean) params[1];
+            this.removeLocalBooking = (Boolean) params[2];
             BookingReleaseInput input = (BookingReleaseInput) params[0];
             qrCode = input.getQrCode();
             book(input);
@@ -102,7 +107,7 @@ public class BookingReleaseAsyncTask extends AsyncTask<Object, String, String> {
                 @Override
                 public void run() {
                     // This code will always run on the UI thread, therefore is safe to modify UI elements.
-                    u.showBookingReleaseResponse(response, qrCode);
+                    u.showBookingReleaseResponse(response, qrCode, showConfirmation, removeLocalBooking);
                 }
             });
         }

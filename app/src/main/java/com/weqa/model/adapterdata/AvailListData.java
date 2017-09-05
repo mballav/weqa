@@ -29,6 +29,30 @@ public class AvailListData {
         this.authList = this.util.getAuthorizationInfo(selectedBuildingId);
     }
 
+    public void update(FloorplanResponseV2 rUpdate) {
+        List<FloorPlanDetailV2> fList = rUpdate.getFloorPlanDetails();
+        for (FloorPlanDetailV2 f : fList) {
+            List<ItemTypeDetailV2> iList = f.getItemTypeDetail();
+            for (ItemTypeDetailV2 i : iList) {
+                setItemCount(f.getFloorPlanId(), i.getItemTypeId(), i.getItemCount());
+            }
+        }
+    }
+
+    private void setItemCount(Integer floorplanId, Integer itemTypeId, Integer itemCount) {
+        List<FloorPlanDetailV2> fList = this.response.getFloorPlanDetails();
+        for (FloorPlanDetailV2 f : fList) {
+            if (f.getFloorPlanId().equals(floorplanId)) {
+                List<ItemTypeDetailV2> iList = f.getItemTypeDetail();
+                for (ItemTypeDetailV2 i : iList) {
+                    if (i.getItemTypeId().equals(itemTypeId)) {
+                        i.setItemCount(itemCount);
+                    }
+                }
+            }
+        }
+    }
+
     public List<AvailListItem> getListData(int itemTypeId) {
         List<AvailListItem> data = new ArrayList<>();
         List<FloorPlanDetailV2> fList = response.getFloorPlanDetails();

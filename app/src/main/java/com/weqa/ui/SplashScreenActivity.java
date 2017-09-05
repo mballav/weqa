@@ -49,10 +49,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             Typeface tf = Typeface.createFromAsset(this.getAssets(), "font/HelveticaNeueMed.ttf");
 
-            TextView appname = (TextView) findViewById(R.id.appname);
             TextView appslogan = (TextView) findViewById(R.id.appslogan);
 
-            appname.setTypeface(tf);
             appslogan.setTypeface(tf);
 
         /*
