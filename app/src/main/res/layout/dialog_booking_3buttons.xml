@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/colorMENU">
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/colorLighterGrey"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/colorLighterGrey"
+        />
+
+    <LinearLayout
+        android:id="@+id/buttonPanel"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_button"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:paddingTop="5dp"
+            android:text="Cancel Booking"
+            android:textColor="@color/colorLighterGrey"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_button"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_marginLeft="10dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:paddingTop="5dp"
+            android:text="OK"
+            android:textColor="@color/colorLighterGrey"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner_button"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:layout_marginLeft="10dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:paddingTop="5dp"
+            android:text="OK"
+            android:textColor="@color/colorLighterGrey"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

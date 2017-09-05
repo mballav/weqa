@@ -44,6 +44,7 @@ public class SharedPreferencesUtil {
     final static String DATE_FORMAT = "MM/dd/yyyy HH:mm:ss";
 
     final static String NO_SPACE_ON_DEVICE = "NoSpaceOnDevice";
+    final static String QRCODE_BOOKING = "QRCodeBooking";
 
     private Context context;
     private String logTag;
@@ -55,7 +56,7 @@ public class SharedPreferencesUtil {
 
     public SharedPreferencesUtil(Context context) {
         this.context = context;
-        this.logTag = "YEZLO-LOG";
+        this.logTag = "WEQA-LOG";
     }
 
     public Authorization getLatestBookedBuilding() {
@@ -78,6 +79,37 @@ public class SharedPreferencesUtil {
     public double getGeofenceRadius() {
         spConfig = context.getSharedPreferences(CONFIG_FILENAME, Context.MODE_PRIVATE);
         return (double) spConfig.getInt(Configuration.GEO_FENCE, 0);
+    }
+
+    public void addBooking(String qrCode, String expiryDateTime) {
+        spHistory = context.getSharedPreferences(HISTORY_FILENAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = spHistory.edit();
+        editor.putString(QRCODE_BOOKING, qrCode + "_" + expiryDateTime);
+        editor.commit();
+    }
+
+    public void removeBooking() {
+        spHistory = context.getSharedPreferences(HISTORY_FILENAME, Context.MODE_PRIVATE);
+        String code = spHistory.getString(QRCODE_BOOKING, "");
+        if (!code.equals("")) {
+            SharedPreferences.Editor editor = spHistory.edit();
+            editor.remove(QRCODE_BOOKING);
+            editor.commit();
+        }
+    }
+
+    public String getBookingQRCode() {
+        spHistory = context.getSharedPreferences(HISTORY_FILENAME, Context.MODE_PRIVATE);
+        String code = spHistory.getString(QRCODE_BOOKING, "");
+        if (code.equals("")) return null;
+        String[] codes = code.split("_");
+        if (!DatetimeUtil.isDateExpired(codes[1])) {
+            return codes[0];
+        }
+        else {
+            removeBooking();
+            return null;
+        }
     }
 
     public void setNoSpaceOnDevice(boolean noSpaceOnDevice) {

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.weqa.model.BookingInput;
 import com.weqa.model.BookingReleaseInput;
 import com.weqa.model.BookingResponse;
 import com.weqa.service.AuthService;
@@ -18,13 +17,13 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 
 /**
- * Created by Manish Ballav on 9/2/2017.
+ * Created by Manish Ballav on 9/5/2017.
  */
 
-public class BookingReleaseAsyncTask extends AsyncTask<Object, String, String> {
+public class BookingRenewAsyncTask extends AsyncTask<Object, String, String> {
 
-    public static interface OnShowBookingReleaseResponse {
-        public void showBookingReleaseResponse(BookingResponse br, String qrCode);
+    public static interface OnShowBookingRenewResponse {
+        public void showBookingRenewResponse(BookingResponse br, String qrCode);
     }
 
     public static final String STATUS_OK = "ok";
@@ -38,7 +37,7 @@ public class BookingReleaseAsyncTask extends AsyncTask<Object, String, String> {
 
     private String qrCode;
 
-    public BookingReleaseAsyncTask(Retrofit retrofit, String logTAG, Activity activity) {
+    public BookingRenewAsyncTask(Retrofit retrofit, String logTAG, Activity activity) {
         this.retrofit = retrofit;
         this.logTag = logTAG;
         this.activity = activity;
@@ -96,15 +95,16 @@ public class BookingReleaseAsyncTask extends AsyncTask<Object, String, String> {
     @Override
     protected void onPostExecute(String status) {
         if (status.equals(STATUS_OK)) {
-            final BookingReleaseAsyncTask.OnShowBookingReleaseResponse u
-                    = (BookingReleaseAsyncTask.OnShowBookingReleaseResponse) this.activity;
+            final BookingRenewAsyncTask.OnShowBookingRenewResponse u
+                    = (BookingRenewAsyncTask.OnShowBookingRenewResponse) this.activity;
             this.activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     // This code will always run on the UI thread, therefore is safe to modify UI elements.
-                    u.showBookingReleaseResponse(response, qrCode);
+                    u.showBookingRenewResponse(response, qrCode);
                 }
             });
         }
     }
+
 }

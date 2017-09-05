@@ -31,6 +31,15 @@ public class QRCodeUtil {
         this.context = context;
     }
 
+    public static long getBuildingId(String qrCode) {
+        String[] tokens = qrCode.split(",");
+
+        if (tokens.length < 4)
+            return 0L;
+
+        return Long.parseLong(tokens[2]);
+    }
+
     public boolean isQRCodeValid(String qrCode) {
         String[] tokens = qrCode.split(",");
 
@@ -50,17 +59,17 @@ public class QRCodeUtil {
             return false;
         }
 
-        if (!isBuildingFloorValid(orgId, buildingId)) {
+        if (!isBuildingValid(orgId, buildingId)) {
             Log.d(LOG_TAG, "---------------------------Failed the authorization test!");
             return false;
         }
         Log.d(LOG_TAG, "---------------------------Passed the authorization test!");
-        if (!inVicinityOfBuilding(buildingId)) {
+/*        if (!inVicinityOfBuilding(buildingId)) {
             Log.d(LOG_TAG, "---------------------------Failed the latitude longitude test!");
             return false;
         }
         Log.d(LOG_TAG, "---------------------------Passed the latitude longitude test!");
-
+*/
         return true;
     }
 
@@ -72,7 +81,7 @@ public class QRCodeUtil {
      * @param buildingId
      * @return
      */
-    private boolean isBuildingFloorValid(long orgId, long buildingId) {
+    private boolean isBuildingValid(long orgId, long buildingId) {
 
         List<Long> orgIdList = this.util.getOrganizationIdList();
         if (!orgIdList.contains(orgId))

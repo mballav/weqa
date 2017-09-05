@@ -54,7 +54,7 @@ public class FloorplanV2AsyncTask extends AsyncTask<Object, String, String> {
     @Override
     protected String doInBackground(Object... params) {
         try {
-            getFloorplanDetails((FloorplanInputV2) params[0], (Integer) params[1]);
+            getFloorplanDetails((FloorplanInputV2) params[0], (Long) params[1]);
         } catch (Exception e) {
             Log.d(logTag, "Error in async task! " + e.getMessage());
             final Context context = this.activity.getApplicationContext();
@@ -70,7 +70,7 @@ public class FloorplanV2AsyncTask extends AsyncTask<Object, String, String> {
         return STATUS_OK;
     }
 
-    private void getFloorplanDetails(FloorplanInputV2 input, Integer buildingId) {
+    private void getFloorplanDetails(FloorplanInputV2 input, Long buildingId) {
         AuthService service = retrofit.create(AuthService.class);
         Gson gson = new Gson();
         String json = gson.toJson(input); // myObject - instance of MyObject
@@ -104,7 +104,7 @@ public class FloorplanV2AsyncTask extends AsyncTask<Object, String, String> {
         }
     }
 
-    private void saveFloorplans(FloorplanResponseV2 r, Integer buildingId) {
+    private void saveFloorplans(FloorplanResponseV2 r, Long buildingId) {
         long extMemSize = MemoryUtil.getExternalStorageSpace();
         FloorPlanDetailV2 f = r.getFloorPlanDetails().get(0);
 

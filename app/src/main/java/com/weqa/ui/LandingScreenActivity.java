@@ -1,6 +1,5 @@
 package com.weqa.ui;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -8,8 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -25,13 +22,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +34,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.weqa.R;
 import com.weqa.adapter.AvailListAdapter;
-import com.weqa.model.AuthInput;
 import com.weqa.model.Authorization;
 import com.weqa.model.BookingInput;
 import com.weqa.model.BookingReleaseInput;
@@ -58,10 +50,10 @@ import com.weqa.model.adapterdata.AvailListData;
 import com.weqa.model.adapterdata.AvailListItem;
 import com.weqa.service.InstanceIdService;
 import com.weqa.service.RetrofitBuilder;
-import com.weqa.util.AuthAsyncTask;
 import com.weqa.util.AuthorizationUtil;
 import com.weqa.util.BookingAsyncTask;
 import com.weqa.util.BookingReleaseAsyncTask;
+import com.weqa.util.BookingRenewAsyncTask;
 import com.weqa.util.BuildingUtil;
 import com.weqa.util.DatetimeUtil;
 import com.weqa.util.DialogUtil;
@@ -71,8 +63,6 @@ import com.weqa.util.QRCodeUtil;
 import com.weqa.util.SharedPreferencesUtil;
 import com.weqa.util.UIHelper;
 import com.weqa.widget.SearchableSpinner;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -89,7 +79,7 @@ public class LandingScreenActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener,
         FloorplanV2AsyncTask.UpdateFloorplan, AdapterView.OnItemSelectedListener,
         BookingAsyncTask.OnShowBookingResponse, BookingReleaseAsyncTask.OnShowBookingReleaseResponse,
-        AvailListAdapter.OnAvailListClickListener {
+        AvailListAdapter.OnAvailListClickListener, BookingRenewAsyncTask.OnShowBookingRenewResponse {
 
     private static String LOG_TAG = "WEQA-LOG";
 
@@ -107,7 +97,8 @@ public class LandingScreenActivity extends AppCompatActivity
     private List items;
     private SharedPreferencesUtil util;
     private Authorization selectedBuilding;
-    private int selectedBuildingId;
+    private long selectedBuildingId;
+    private long selectedFloorplanId;
 
     private List<Authorization> compiledAuthList;
 
@@ -129,6 +120,8 @@ public class LandingScreenActivity extends AppCompatActivity
 
     private List<Authorization> authListOriginal;
     private static String TEST_QR_CODE = "2,1,1,2017-09-02 00:00:40";
+    private static String TEST_QR_CODE_2 = "2,1,1,2017-09-02 00:00:60";
+    private static String TEST_QR_CODE_3 = "2,1,4,2017-09-02 00:00:30";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -318,6 +311,16 @@ public class LandingScreenActivity extends AppCompatActivity
         fetchFloorplanAndAvailability();
     }
 
+    public void updateFloorplanAvailability() {
+        if (mapViewContainer.getVisibility() == View.VISIBLE)
+            mapViewContainer.setVisibility(View.GONE);
+        if (listContainer.getVisibility() == View.VISIBLE)
+            listContainer.setVisibility(View.GONE);
+        progressBarContainer.setVisibility(View.VISIBLE);
+
+        fetchAvailabilityForCurrentFloorplan();
+    }
+
     @Override
     public void downloadAndUpdateFloorplan(long floorNumber) {
         if (mapViewContainer.getVisibility() == View.VISIBLE)
@@ -334,6 +337,8 @@ public class LandingScreenActivity extends AppCompatActivity
             }
         }
 
+        selectedFloorplanId = floorplanId;
+
         Log.d(LOG_TAG, "------------------------------------ Floorplan ID: " + floorplanId);
         fetchFloorplanAndAvailability(floorplanId);
     }
@@ -342,6 +347,7 @@ public class LandingScreenActivity extends AppCompatActivity
     public void updateFloorplan(FloorplanResponseV2 fr) {
 
         FloorPlanDetailV2 f = fr.getFloorPlanDetails().get(0);
+        selectedFloorplanId = f.getFloorPlanId().longValue();
         floorLevel = util.getFloorLevel(selectedBuildingId, f.getFloorPlanId().longValue());
 
         mTabLayout.removeAllTabs();
@@ -466,12 +472,12 @@ public class LandingScreenActivity extends AppCompatActivity
             if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
 /*                QRCodeUtil qrCodeUtil = new QRCodeUtil(util, this);
-                if (qrCodeUtil.isQRCodeValid(TEST_QR_CODE)) {
-                    bookQRCodeItem(TEST_QR_CODE);
+                if (qrCodeUtil.isQRCodeValid(TEST_QR_CODE_3)) {
+                    bookQRCodeItem(TEST_QR_CODE_3);
                 }
                 else {
-                    DialogUtil.showOkDialog(this, "Invalid QR Code! Code: " + TEST_QR_CODE);
-                }*/
+                    DialogUtil.showOkDialog(this, "Invalid QR Code! Code: " + TEST_QR_CODE, false, false);
+                } */
             } else {
                 String qrCode = result.getContents();
                 QRCodeUtil qrCodeUtil = new QRCodeUtil(util, this);
@@ -479,7 +485,7 @@ public class LandingScreenActivity extends AppCompatActivity
                     bookQRCodeItem(qrCode);
                 }
                 else {
-                    DialogUtil.showOkDialog(this, "Invalid QR Code: " + qrCode);
+                    DialogUtil.showOkDialog(this, "Invalid QR Code: " + qrCode, false, false);
                 }
             }
         } else {
@@ -490,46 +496,100 @@ public class LandingScreenActivity extends AppCompatActivity
     private void bookQRCodeItem(String qrCode) {
         Retrofit retrofit = RetrofitBuilder.getRetrofit();
 
-        BookingInput input = new BookingInput("AS101", qrCode);
-        Log.d(LOG_TAG, "Calling the API to book...");
-        BookingAsyncTask runner = new BookingAsyncTask(retrofit, LOG_TAG, this);
-        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
-        Log.d(LOG_TAG, "Waiting for response...");
+        String qrCodeBooked = util.getBookingQRCode();
+        // Case of new booking or Re-Booking
+        if (qrCodeBooked == null || qrCodeBooked.equals(qrCode)) {
+            BookingInput input = new BookingInput(InstanceIdService.getAppInstanceId(this), qrCode);
+            Log.d(LOG_TAG, "Calling the API to book...");
+            BookingAsyncTask runner = new BookingAsyncTask(retrofit, LOG_TAG, this);
+            runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
+            Log.d(LOG_TAG, "Waiting for response...");
+        }
+        // Case of double booking
+        else if (!qrCodeBooked.equals(qrCode)) {
+            BookingReleaseInput input = new BookingReleaseInput(CodeConstants.AC601, InstanceIdService.getAppInstanceId(this), qrCode);
+            Log.d(LOG_TAG, "Calling the API to release...");
+            BookingReleaseAsyncTask runner = new BookingReleaseAsyncTask(retrofit, LOG_TAG, this);
+            runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
+            Log.d(LOG_TAG, "Waiting for response...");
+        }
+
     }
 
     public void releaseQRCodeItem(String qrCode) {
         Retrofit retrofit = RetrofitBuilder.getRetrofit();
 
-        BookingReleaseInput input = new BookingReleaseInput(CodeConstants.AC301, "MB101", qrCode);
+        BookingReleaseInput input = new BookingReleaseInput(CodeConstants.AC301, InstanceIdService.getAppInstanceId(this), qrCode);
         Log.d(LOG_TAG, "Calling the API to release...");
         BookingReleaseAsyncTask runner = new BookingReleaseAsyncTask(retrofit, LOG_TAG, this);
         runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
         Log.d(LOG_TAG, "Waiting for response...");
     }
 
+    public void renewQRCodeItem(String qrCode) {
+        Retrofit retrofit = RetrofitBuilder.getRetrofit();
+
+        BookingReleaseInput input = new BookingReleaseInput(CodeConstants.AC302, InstanceIdService.getAppInstanceId(this), qrCode);
+        Log.d(LOG_TAG, "Calling the API to release...");
+        BookingRenewAsyncTask runner = new BookingRenewAsyncTask(retrofit, LOG_TAG, this);
+        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
+        Log.d(LOG_TAG, "Waiting for response...");
+    }
+
+    @Override
+    public void showBookingRenewResponse(BookingResponse br, String qrCode) {
+        if (br.getActionCode().equals(CodeConstants.RC302)) {
+            String message = "Desk is successfully booked for next " + DatetimeUtil.getTimeDifference(br.getBookedTime());
+            DialogUtil.showOkDialog(this, message, false, true);
+            util.addBooking(qrCode, br.getBookedTime());
+        }
+    }
+
     @Override
     public void showBookingResponse(BookingResponse br, String qrCode) {
         // set the custom dialog components - text, image and button
-        if (br.getActionCode().equals(CodeConstants.RC301))
+        if (br.getActionCode().equals(CodeConstants.RC301)) {
+            boolean refreshFloorplan = false;
+            if (QRCodeUtil.getBuildingId(qrCode) == selectedBuildingId) {
+                refreshFloorplan = true;
+            }
             DialogUtil.showOkDialogWithCancel(this,
-                    "Desk successfully booked until " + DatetimeUtil.getLocalDateTime(br.getBookedTime()),
-                    qrCode);
-        else if (br.getActionCode().equals(CodeConstants.RC401)) {
-            DialogUtil.showOkDialog(this,
-                    "This desk has already been booked until " + DatetimeUtil.getLocalDateTime(br.getBookedTime()));
+                    "Desk is successfully booked for next " + DatetimeUtil.getTimeDifference(br.getBookedTime()),
+                    qrCode, refreshFloorplan);
+            util.addBooking(qrCode, br.getBookedTime());
+        } else if (br.getActionCode().equals(CodeConstants.RC401)) {
+            String message = "Desk is not available - " + DatetimeUtil.getTimeDifference(br.getBookedTime())
+                                + " remaining on current booking.";
+            DialogUtil.showOkDialog(this, message, false, true);
         }
+        // If user has booked the same qrCode before and has scanned the same qrCode again.
         else if (br.getActionCode().equals(CodeConstants.RC501)) {
-            DialogUtil.showOkDialog(this, "You have booked a desk already!");
+            String message = "You still have " + DatetimeUtil.getTimeDifference(br.getBookedTime()) + " remaining on this booking";
+            DialogUtil.showDialogWithThreeButtons(this, message, qrCode);
         }
     }
-
 
     @Override
-    public void showBookingReleaseResponse(BookingResponse br) {
+    public void showBookingReleaseResponse(BookingResponse br, String qrCode) {
         if (br.getActionCode().equals(CodeConstants.RC601)) {
-            DialogUtil.showOkDialog(this, "Booking canceled!");
+            DialogUtil.showOkDialog(this, "Desk is now released!", false, false);
+            util.removeBooking();
+        } else if (br.getActionCode().equals(CodeConstants.RC401)) {
+            String message = "Desk is not available - " + DatetimeUtil.getTimeDifference(br.getBookedTime())
+                    + " remaining on current booking.";
+            DialogUtil.showOkDialog(this, message, false, true);
+        }
+        // If user has already booked one qrCode and this is the second one booked
+        else if (br.getActionCode().equals(CodeConstants.RC701)) {
+            String qrCodeOld = util.getBookingQRCode();
+            String message = "Desk is successfully booked for next " + DatetimeUtil.getTimeDifference(br.getBookedTime());
+            DialogUtil.showOkDialogWithCancelForSecondBooking(this, message, qrCodeOld, qrCode, br.getBookedTime());
+        }
+        // If user has already booked two desks, new booking is not allowed
+        else if (br.getActionCode().equals(CodeConstants.RC801)) {
         }
     }
+
 
     private void updateFloorplanWithHotspots(String locations, int hotspotColor) {
         Matrix matrix = new Matrix();
@@ -636,7 +696,7 @@ public class LandingScreenActivity extends AppCompatActivity
             floorplanList.add(fp);
         }
         input.setFloorPlan(floorplanList);
-        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input, new Integer(selectedBuildingId));
+        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input, new Long(selectedBuildingId));
     }
 
     private void fetchFloorplanAndAvailability(long floorplanId) {
@@ -675,6 +735,27 @@ public class LandingScreenActivity extends AppCompatActivity
             }
         }
         input.setFloorPlan(floorplanList);
-        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input, new Integer(selectedBuildingId));
+        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input, new Long(selectedBuildingId));
+    }
+
+    public void fetchAvailabilityForCurrentFloorplan() {
+        Retrofit retrofit = RetrofitBuilder.getRetrofit();
+
+        FloorplanV2AsyncTask runner = new FloorplanV2AsyncTask(retrofit, LOG_TAG, this);
+
+        FloorplanInputV2 input = new FloorplanInputV2();
+        input.setActionCodeItemType(CodeConstants.AC101);
+        input.setActionCodeFloorPlan(CodeConstants.AC201);
+        input.setBuildingId("" + selectedBuildingId);
+        input.setUuid(InstanceIdService.getAppInstanceId(this));
+
+        List<FloorPlan> floorplanList = new ArrayList<FloorPlan>();
+        FloorPlan fp = new FloorPlan();
+        fp.setFloorPlanId(new Long(selectedFloorplanId).intValue());
+        fp.setImageStatus(true);
+        floorplanList.add(fp);
+
+        input.setFloorPlan(floorplanList);
+        runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input, new Long(selectedBuildingId));
     }
 }
