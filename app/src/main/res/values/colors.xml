@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <color name="colorAccent">#FF4081</color>
     <color name="colorFadedBlue">#2460A6</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorLighterGrey">#dddddd</color>
+    <color name="colorLightestGrey">#eeeeee</color>
     <color name="colorLightGrey">#aaaaaa</color>
     <color name="colorGrey">#888888</color>
-    <color name="colorDarkGrey">#666666</color>
+    <color name="colorDarkGrey">#222222</color>
     <color name="colorDarkGreen">#009900</color>
     <color name="colorDarkRed">#dd0000</color>
     <color name="color_preloader_start">#000000</color>
@@ -16,10 +17,22 @@
     <color name="color_preloader_end">#ff56a9c7</color>
     <color name="color_purple">#AD0057</color>
 
-    <color name="colorTOP">#292929</color>
+    <color name="colorRed">#ef5350</color>
+    <color name="colorGreen">#4caf50</color>
+
+    <color name="colorPrimaryDark">#003765</color>
+
+    <color name="colorTABbg">#0058a1</color>
+    <color name="colorTOP">#0058a1</color>
+    <color name="colorMENU">#0058a1</color>
+    <color name="colorTABtext">#FFFFFF</color>
+    <color name="colorTABtextSelected">#f5c851</color>
+    <color name="colorLISTIcon">#0058a1</color>
+
+<!--<color name="colorTOP">#292929</color>
     <color name="colorTABbg">#3C4A57</color>
     <color name="colorMENU">#32404E</color>
     <color name="colorTABtext">#FFFFFF</color>
     <color name="colorTABtextSelected">#D3FDA8</color>
-    <color name="colorLISTIcon">#28AAE1</color>
+    <color name="colorLISTIcon">#28AAE1</color> -->
 </resources>

@@ -103,7 +103,7 @@ public class LandingScreenActivity extends AppCompatActivity
     private List<Authorization> compiledAuthList;
 
     private PhotoView floorplan;
-    private TextView floorNumberText;
+    private TextView floorNumberText, listText;
 
     private int originalBitmapWidth, originalBitmapHeight;
     private float hotspotSize;
@@ -205,7 +205,9 @@ public class LandingScreenActivity extends AppCompatActivity
         TextView homeText = (TextView) findViewById(R.id.textView1);
         homeText.setTextColor(ContextCompat.getColor(this, R.color.colorTABtextSelected));
 
-        TextView tapToEnlarge = (TextView) findViewById(R.id.taptoenlarge);
+        listText = (TextView) findViewById(R.id.listtext);
+
+        RelativeLayout tapToEnlarge = (RelativeLayout) findViewById(R.id.taptoenlarge);
         tapToEnlarge.setOnTouchListener(this);
         tapToEnlarge.setOnClickListener(this);
         floorNumberText.setOnTouchListener(this);
@@ -217,11 +219,10 @@ public class LandingScreenActivity extends AppCompatActivity
     public boolean onTouch(View v, MotionEvent event) {
 
         if (v.getId() == R.id.taptoenlarge) {
-            TextView t = (TextView) v;
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                t.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorTOP));
+                listText.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorTABtext));
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                t.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorLISTIcon));
+                listText.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorTABtextSelected));
             }
             return false;
         }
@@ -237,7 +238,7 @@ public class LandingScreenActivity extends AppCompatActivity
         else {
             LinearLayout l = (LinearLayout) v;
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                l.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.colorTOP));
+                l.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.colorTABtextSelected));
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 l.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.colorMENU));
             }
@@ -504,12 +505,12 @@ public class LandingScreenActivity extends AppCompatActivity
         if (result != null) {
             if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();QRCodeUtil qrCodeUtil = new QRCodeUtil(util, this);
-                if (qrCodeUtil.isQRCodeValid(TEST_QR_CODE)) {
+/*                if (qrCodeUtil.isQRCodeValid(TEST_QR_CODE)) {
                     bookQRCodeItem(TEST_QR_CODE);
                 }
                 else {
                     DialogUtil.showOkDialog(this, "Invalid QR Code! Code: " + TEST_QR_CODE, false, false);
-                }
+                } */
             } else {
                 String qrCode = result.getContents();
                 QRCodeUtil qrCodeUtil = new QRCodeUtil(util, this);

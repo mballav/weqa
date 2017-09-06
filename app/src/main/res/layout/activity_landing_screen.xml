@@ -155,18 +155,55 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.8"
                 android:gravity="left"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <com.weqa.widget.SearchableSpinner
-                    android:id="@+id/spinner"
-                    style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/planets"
-                    app:searchBackgroundColor="@color/colorTOP" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/layout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <ImageView
+                            android:id="@+id/searchIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/search_icon"/>
+
+                        <com.weqa.widget.SearchableSpinner
+                            android:id="@+id/spinner"
+                            style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/planets"
+                            android:background="@null"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="40dp"
+                            app:searchBackgroundColor="@color/colorPrimaryDark" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorLightGrey"
+                        android:layout_alignStart="@id/layout1"
+                        android:layout_below="@id/layout1"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
+                        />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -185,6 +222,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:elevation="10dp"
                 android:background="@color/colorLighterGrey" />
 
             <RelativeLayout
@@ -193,6 +231,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/sliding_tabs"
                 android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark"
                 >
 
                 <ProgressBar
@@ -211,6 +250,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/sliding_tabs"
                 android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark"
                 >
 
                 <android.support.v7.widget.RecyclerView
@@ -226,6 +266,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/sliding_tabs"
                 android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimaryDark"
                 >
 
                 <com.github.chrisbanes.photoview.PhotoView
@@ -234,18 +275,21 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:scaleType="fitCenter" />
 
                 <TextView
                     android:id="@+id/floorNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="10dp"
                     android:layout_alignParentTop="true"
-                    android:layout_marginTop="30dp"
-                    android:background="@drawable/floorplan_number_rectangle"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorPrimaryDark"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
@@ -284,20 +328,38 @@
 
                                 </RelativeLayout>-->
 
-                <TextView
+                <RelativeLayout
                     android:id="@+id/taptoenlarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rectangle_white_no_border"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/floorplan_number_rectangle"
+                    android:elevation="10dp"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
-                    android:text="Switch to Floor List"
-                    android:textColor="@color/colorLISTIcon" />
+                    >
+
+                    <ImageView
+                        android:id="@+id/listicon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/list_2_16_yellow"/>
+
+                    <TextView
+                        android:id="@+id/listtext"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/listicon"
+                        android:layout_marginLeft="10dp"
+                        android:text="List"
+                        android:textColor="@color/colorTABtextSelected" />
+
+                </RelativeLayout>
 
             </RelativeLayout>
 

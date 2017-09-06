@@ -41,11 +41,13 @@ public class AvailListAdapter extends RecyclerView.Adapter<AvailListAdapter.Avai
     protected LayoutInflater inflater;
     protected List<AvailListItem> itemData;
     protected OnAvailListClickListener listener;
+    protected Context c;
 
     public AvailListAdapter(List<AvailListItem> itemData, Context c, AvailListAdapter.OnAvailListClickListener listener){
         inflater = LayoutInflater.from(c);
         this.itemData = itemData;
         this.listener = listener;
+        this.c = c;
     }
 
     public void setItemData(List<AvailListItem> itemData) {
@@ -62,7 +64,10 @@ public class AvailListAdapter extends RecyclerView.Adapter<AvailListAdapter.Avai
     public void onBindViewHolder(AvailListAdapter.AvailItemHolder holder, int position) {
         final AvailListItem item = this.itemData.get(position);
         holder.floorNumber.setText("Floor " + item.getFloorNumber());
-        holder.availability.setText("Available: " + item.getAvailability());
+        holder.availability.setText("" + item.getAvailability());
+        if (item.getAvailability() == 0) {
+            holder.availability.setBackground(this.c.getResources().getDrawable(R.drawable.background_round_avail_red));
+        }
         holder.availContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
