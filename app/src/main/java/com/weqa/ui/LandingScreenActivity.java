@@ -123,6 +123,13 @@ public class LandingScreenActivity extends AppCompatActivity
     private static String TEST_QR_CODE_2 = "2,1,1,2017-09-02 00:00:60";
     private static String TEST_QR_CODE_3 = "2,1,4,2017-09-02 00:00:30";
 
+    private static enum ViewType { LIST, MAP };
+
+    private ViewType currentView = ViewType.MAP;
+    private int currentTabIndex = 0;
+
+    private Map<Integer, Integer> itemTypeInverseIdMap = new HashMap<Integer, Integer>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -195,6 +202,9 @@ public class LandingScreenActivity extends AppCompatActivity
         menu4.setOnTouchListener(this);
         menu5.setOnTouchListener(this);
 
+        TextView homeText = (TextView) findViewById(R.id.textView1);
+        homeText.setTextColor(ContextCompat.getColor(this, R.color.colorTABtextSelected));
+
         TextView tapToEnlarge = (TextView) findViewById(R.id.taptoenlarge);
         tapToEnlarge.setOnTouchListener(this);
         tapToEnlarge.setOnClickListener(this);
@@ -245,9 +255,10 @@ public class LandingScreenActivity extends AppCompatActivity
             if (listContainer.getVisibility() == View.GONE) {
                 mapViewContainer.setVisibility(View.GONE);
                 listContainer.setVisibility(View.VISIBLE);
+                currentView = ViewType.LIST;
             }
         }
-        else {
+        else if (v.getId() != R.id.menu1){
             Toast.makeText(v.getContext(), "Under Development", Toast.LENGTH_SHORT).show();
         }
     }
@@ -338,8 +349,8 @@ public class LandingScreenActivity extends AppCompatActivity
         }
 
         selectedFloorplanId = floorplanId;
+        currentView = ViewType.MAP;
 
-        Log.d(LOG_TAG, "------------------------------------ Floorplan ID: " + floorplanId);
         fetchFloorplanAndAvailability(floorplanId);
     }
 
@@ -350,21 +361,35 @@ public class LandingScreenActivity extends AppCompatActivity
         selectedFloorplanId = f.getFloorPlanId().longValue();
         floorLevel = util.getFloorLevel(selectedBuildingId, f.getFloorPlanId().longValue());
 
-        mTabLayout.removeAllTabs();
-        int i = 0;
-        itemTypeIdMap.clear();
-        Map<Integer, Integer> itemTypeInverseIdMap = new HashMap<Integer, Integer>();
-        for (ResponseOrgBasedItemType ri : fr.getResponseOrgBasedItemType()) {
-            itemTypeIdMap.put(i, ri.getItemTypeId());
-            itemTypeInverseIdMap.put(ri.getItemTypeId(), i);
-            mTabLayout.addTab(mTabLayout.newTab().setText(ri.getItemType()));
-            i++;
+        if (!listenerAdded) {
+            mTabLayout.removeAllTabs();
+            for (ResponseOrgBasedItemType ri : fr.getResponseOrgBasedItemType()) {
+                mTabLayout.addTab(mTabLayout.newTab().setText(ri.getItemType()));
+            }
+            int i = 0;
+            itemTypeIdMap.clear();
+            for (ResponseOrgBasedItemType ri : fr.getResponseOrgBasedItemType()) {
+                itemTypeIdMap.put(i, ri.getItemTypeId());
+                itemTypeInverseIdMap.put(ri.getItemTypeId(), i);
+                i++;
+            }
+
         }
 
         locationsMap.clear();
-        for (ItemTypeDetailV2 itd : f.getItemTypeDetail()) {
-            locationsMap.put(itemTypeInverseIdMap.get(itd.getItemTypeId()), itd.getImageLocation());
-            itemCountMap.put(itemTypeInverseIdMap.get(itd.getItemTypeId()), itd.getItemCount());
+        for (Integer key : itemTypeIdMap.keySet()) {
+            Integer itemTypeId = itemTypeIdMap.get(key);
+            String locations = "";
+            int itemCount = 0;
+            for (ItemTypeDetailV2 itd : f.getItemTypeDetail()) {
+                if (itd.getItemTypeId().equals(itemTypeId)) {
+                    locations = itd.getImageLocation();
+                    itemCount = itd.getItemCount();
+                    break;
+                }
+            }
+            locationsMap.put(key, locations);
+            itemCountMap.put(key, itemCount);
         }
 
         if (buildingChanged) {
@@ -374,7 +399,7 @@ public class LandingScreenActivity extends AppCompatActivity
         else {
             availData.update(fr);
         }
-        List<AvailListItem> items = availData.getListData(fr.getResponseOrgBasedItemType().get(0).getItemTypeId());
+        List<AvailListItem> items = availData.getListData(itemTypeIdMap.get(currentTabIndex));
         AvailListAdapter adapter = new AvailListAdapter(items, this, this);
         availList.setAdapter(adapter);
 
@@ -416,29 +441,26 @@ public class LandingScreenActivity extends AppCompatActivity
 
             floorplan.setImageBitmap(decodedByte);
 
-            mTabLayout.getTabAt(0).select();
-            floorNumberText.setText("Floor " + floorLevel + " (" + itemCountMap.get(0) + " available)");
+            mTabLayout.getTabAt(currentTabIndex).select();
+            floorNumberText.setText("Floor " + floorLevel + " (" + itemCountMap.get(currentTabIndex) + " available)");
 
-            String locations = (locationsMap.get(0) == null) ? "" : locationsMap.get(0);
-            updateFloorplanWithHotspots(locations, itemTypeColors[0]);
+            String locations = (locationsMap.get(currentTabIndex) == null) ? "" : locationsMap.get(currentTabIndex);
+            updateFloorplanWithHotspots(locations, itemTypeColors[currentTabIndex]);
 
             if (!listenerAdded) {
                 mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
                         int position = tab.getPosition();
+                        currentTabIndex = position;
 
-                        if (mapViewContainer.getVisibility() == View.VISIBLE) {
-                            String locations = (locationsMap.get(position) == null) ? "" : locationsMap.get(position);
-                            updateFloorplanWithHotspots(locations, itemTypeColors[position]);
-                            floorNumberText.setText("Floor " + floorLevel + " (" + itemCountMap.get(position) + " available)");
-                        }
+                        String locations = (locationsMap.get(position) == null) ? "" : locationsMap.get(position);
+                        updateFloorplanWithHotspots(locations, itemTypeColors[position]);
+                        floorNumberText.setText("Floor " + floorLevel + " (" + itemCountMap.get(position) + " available)");
 
-                        if (listContainer.getVisibility() == View.VISIBLE) {
-                            List<AvailListItem> items = availData.getListData(itemTypeIdMap.get(position));
-                            AvailListAdapter adapter = new AvailListAdapter(items, LandingScreenActivity.this, LandingScreenActivity.this);
-                            availList.setAdapter(adapter);
-                        }
+                        List<AvailListItem> items = availData.getListData(itemTypeIdMap.get(position));
+                        AvailListAdapter adapter = new AvailListAdapter(items, LandingScreenActivity.this, LandingScreenActivity.this);
+                        availList.setAdapter(adapter);
                     }
 
                     @Override
@@ -456,9 +478,17 @@ public class LandingScreenActivity extends AppCompatActivity
 
             updateTabLayoutMode();
 
-            if (listContainer.getVisibility() == View.VISIBLE)
-                listContainer.setVisibility(View.GONE);
-            mapViewContainer.setVisibility(View.VISIBLE);
+            if (currentView == ViewType.MAP) {
+                if (listContainer.getVisibility() == View.VISIBLE)
+                    listContainer.setVisibility(View.GONE);
+                if (mapViewContainer.getVisibility() == View.GONE)
+                    mapViewContainer.setVisibility(View.VISIBLE);
+            } else {
+                if (mapViewContainer.getVisibility() == View.VISIBLE)
+                    mapViewContainer.setVisibility(View.GONE);
+                if (listContainer.getVisibility() == View.GONE)
+                    listContainer.setVisibility(View.VISIBLE);
+            }
             progressBarContainer.setVisibility(View.GONE);
 
         } else {

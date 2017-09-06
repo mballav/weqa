@@ -1,7 +1,7 @@
 package com.weqa.util;
 
 import android.app.Dialog;
-import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -22,11 +22,13 @@ public class DialogUtil {
         private boolean refreshHotspots;
         private LandingScreenActivity activity;
         public boolean buttonPressed = false;
+        private TextView countdown;
 
         public Timer(Dialog dialog, boolean refreshHotspots, LandingScreenActivity activity) {
             this.dialog = dialog;
             this.refreshHotspots = refreshHotspots;
             this.activity = activity;
+            this.countdown = (TextView) dialog.findViewById(R.id.countdown);
             thread.start();
         }
 
@@ -34,17 +36,29 @@ public class DialogUtil {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(5000); // 5 seconds timer
-                    if (dialog.isShowing())
-                        dialog.dismiss();
-                    if (refreshHotspots && (!buttonPressed))  {
+                    for (int i = 5; i > 0; i--) {
+                        final int j = i;
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                activity.updateFloorplanAvailability();
+                                if (dialog.isShowing())
+                                    countdown.setText("" + j);
                             }
                         });
+                        Thread.sleep(1000); // 5 seconds timer
                     }
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (dialog.isShowing()) {
+                                countdown.setText("0");
+                                dialog.dismiss();
+                            }
+                            if (refreshHotspots && (!buttonPressed))  {
+                                activity.updateFloorplanAvailability();
+                            }
+                        }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -60,6 +74,7 @@ public class DialogUtil {
         private String qrCodeBooked, qrCodeNew;
         private String bookingTime;
         public boolean buttonPressed = false;
+        private TextView countdown;
 
         public Timer2(Dialog dialog, boolean refreshHotspots, boolean removeLocalBooking, LandingScreenActivity activity,
                       String qrCodeBooked, String qrCodeNew, String bookingTime) {
@@ -70,6 +85,7 @@ public class DialogUtil {
             this.qrCodeBooked = qrCodeBooked;
             this.qrCodeNew = qrCodeNew;
             this.bookingTime = bookingTime;
+            this.countdown = (TextView) dialog.findViewById(R.id.countdown);
             thread.start();
         }
 
@@ -77,9 +93,26 @@ public class DialogUtil {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(5000); // 5 seconds timer
-                    if (dialog.isShowing())
-                        dialog.dismiss();
+                    for (int i = 5; i > 0; i--) {
+                        final int j = i;
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (dialog.isShowing())
+                                    countdown.setText("" + j);
+                            }
+                        });
+                        Thread.sleep(1000); // 5 seconds timer
+                    }
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (dialog.isShowing()) {
+                                countdown.setText("0");
+                                dialog.dismiss();
+                            }
+                        }
+                    });
                     if (!buttonPressed) {
                         SharedPreferencesUtil util = new SharedPreferencesUtil(activity);
                         util.addBooking(qrCodeNew, bookingTime);
@@ -96,7 +129,7 @@ public class DialogUtil {
                                               final String qrCode, final boolean refreshHotspots) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_booking);
+        dialog.setContentView(R.layout.dialog_booking_timer);
 
         // set the custom dialog components - text, image and button
         TextView text = (TextView) dialog.findViewById(R.id.bookingmessage);
@@ -139,7 +172,7 @@ public class DialogUtil {
                                                               final String bookingTime, final boolean refreshHotspots) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_booking);
+        dialog.setContentView(R.layout.dialog_booking_timer);
 
         // set the custom dialog components - text, image and button
         TextView text = (TextView) dialog.findViewById(R.id.bookingmessage);
@@ -185,7 +218,12 @@ public class DialogUtil {
                                     final boolean refreshHotspots, final boolean doTimer) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_booking);
+        if (doTimer) {
+            dialog.setContentView(R.layout.dialog_booking_timer);
+        }
+        else {
+            dialog.setContentView(R.layout.dialog_booking);
+        }
 
         // set the custom dialog components - text, image and button
         TextView text = (TextView) dialog.findViewById(R.id.bookingmessage);

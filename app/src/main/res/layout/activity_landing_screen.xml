@@ -236,7 +236,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
-                    android:scaleType="fitXY" />
+                    android:scaleType="fitCenter" />
 
                 <TextView
                     android:id="@+id/floorNumber"
