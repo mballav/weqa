@@ -210,7 +210,6 @@ public class LandingScreenActivity extends AppCompatActivity
         RelativeLayout tapToEnlarge = (RelativeLayout) findViewById(R.id.taptoenlarge);
         tapToEnlarge.setOnTouchListener(this);
         tapToEnlarge.setOnClickListener(this);
-        floorNumberText.setOnTouchListener(this);
 
         updateUI();
     }

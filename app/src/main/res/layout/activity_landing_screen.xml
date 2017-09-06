@@ -134,7 +134,7 @@
             android:layout_alignParentTop="true"
             android:background="@color/colorTOP"
             android:paddingBottom="4dp"
-            android:paddingTop="4dp">
+            android:paddingTop="15dp">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -275,10 +275,10 @@
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:scaleType="fitCenter" />
 
                 <TextView
@@ -289,7 +289,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_alignParentTop="true"
                     android:layout_marginTop="10dp"
-                    android:background="@color/colorPrimaryDark"
+                    android:background="@color/colorPrimaryDarkOpaque"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"

@@ -3,7 +3,7 @@
     android:shape="oval" android:useLevel="true"
     android:dither="true">
 
-    <size android:height="40dip" android:width="40dip"/>
+    <size android:height="50dip" android:width="50dip"/>
 
-    <stroke android:width="2dp" android:color="@color/colorTABtext"/>
+    <stroke android:width="3dp" android:color="@color/colorTABtext"/>
 </shape>

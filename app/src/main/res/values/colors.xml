@@ -21,6 +21,7 @@
     <color name="colorGreen">#4caf50</color>
 
     <color name="colorPrimaryDark">#003765</color>
+    <color name="colorPrimaryDarkOpaque">#80003765</color>
 
     <color name="colorTABbg">#0058a1</color>
     <color name="colorTOP">#0058a1</color>
