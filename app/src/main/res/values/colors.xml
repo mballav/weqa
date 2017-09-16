@@ -19,6 +19,7 @@
 
     <color name="colorRed">#ef5350</color>
     <color name="colorGreen">#4caf50</color>
+    <color name="colorBlack">#000000</color>
 
     <color name="colorPrimaryDark">#003765</color>
     <color name="colorPrimaryDarkOpaque">#80003765</color>
