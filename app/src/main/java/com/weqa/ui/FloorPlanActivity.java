@@ -46,7 +46,7 @@ import retrofit2.Retrofit;
 public class FloorPlanActivity extends AppCompatActivity  implements View.OnClickListener, OnPhotoTapListener,
         FloorplanAsyncTask.UpdateFloorplan {
 
-    private static final String LOG_TAG = "YEZLO-LOG";
+    private static final String LOG_TAG = "WEQA-LOG";
 
     float hotspotSize;
 

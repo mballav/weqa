@@ -21,6 +21,9 @@ public class AuthInput {
     @SerializedName("ConfigurationActionCode")
     @Expose
     private String configurationActionCode;
+    @SerializedName("ActivationCode")
+    @Expose
+    private String activationCode = null;
 
     /**
      * No args constructor for use in serialization
@@ -35,12 +38,14 @@ public class AuthInput {
      * @param configurationCode
      * @param authorizationCode
      */
-    public AuthInput(String uuid, String authenticationCode, String authorizationCode, String configurationCode) {
+    public AuthInput(String uuid, String authenticationCode, String authorizationCode, String configurationCode,
+                     String activationCode) {
         super();
         this.uuid = uuid;
         this.authenticationActionCode = authenticationCode;
         this.authorizationActionCode = authorizationCode;
         this.configurationActionCode = configurationCode;
+        this.activationCode = activationCode;
     }
 
     public String getUuid() { return uuid; }
@@ -73,4 +78,11 @@ public class AuthInput {
         this.configurationActionCode = configurationCode;
     }
 
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
+    }
 }

@@ -19,7 +19,7 @@ import retrofit2.Retrofit;
 public class TestActivity extends AppCompatActivity implements FloorplanImageAsyncTask.UpdateImage {
 
     ImageView floorplan;
-    private static final String LOG_TAG = "YEZLO-LOG";
+    private static final String LOG_TAG = "WEQA-LOG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +43,8 @@ public class TestActivity extends AppCompatActivity implements FloorplanImageAsy
     public void updateUI(String base64Image) {
         byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        Log.d("YEZLO_LOG", "Image Width: " + decodedByte.getWidth());
-        Log.d("YEZLO_LOG", "Image Height: " + decodedByte.getHeight());
+        Log.d(LOG_TAG, "Image Width: " + decodedByte.getWidth());
+        Log.d(LOG_TAG, "Image Height: " + decodedByte.getHeight());
         floorplan.setImageBitmap(decodedByte);
 
         int width = floorplan.getWidth();

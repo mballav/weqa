@@ -15,24 +15,12 @@ public class Org {
     @SerializedName("organizationId")
     @Expose
     private Integer organizationId;
-
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Org() {
-    }
-
-    /**
-     *
-     * @param organizationName
-     * @param organizationId
-     */
-    public Org(String organizationName, Integer organizationId) {
-        super();
-        this.organizationName = organizationName;
-        this.organizationId = organizationId;
-    }
+    @SerializedName("emailId")
+    @Expose
+    private String emailId;
+    @SerializedName("designation")
+    @Expose
+    private String designation;
 
     public String getOrganizationName() {
         return organizationName;
@@ -50,5 +38,20 @@ public class Org {
         this.organizationId = organizationId;
     }
 
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
 }
 

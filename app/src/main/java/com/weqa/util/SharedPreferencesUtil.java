@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.weqa.model.ActivationCode;
 import com.weqa.model.AuthResponse;
 import com.weqa.model.Authentication;
 import com.weqa.model.Authorization;
@@ -174,9 +175,40 @@ public class SharedPreferencesUtil {
         spAuthentication = context.getSharedPreferences(AUTHENTICATION_FILENAME, Context.MODE_PRIVATE);
         spAuthorization = context.getSharedPreferences(AUTHORIZATION_FILENAME, Context.MODE_PRIVATE);
         spConfig = context.getSharedPreferences(CONFIG_FILENAME, Context.MODE_PRIVATE);
+        addActivationCodes(token.getActivationCodes());
         addAuthenticationInfo(token.getAuthentication());
         addAuthorizationInfo(token.getAuthorization());
         addConfigurationInfo(token.getConfiguration());
+    }
+
+    private void addActivationCodes(List<ActivationCode> codes) {
+        if (codes == null || codes.size() == 0) {
+            SharedPreferences.Editor editor = spAuthentication.edit();
+            editor.putString(Authentication.ACTIVATION_CODES, "");
+            return;
+        }
+
+        SharedPreferences.Editor editor = spAuthentication.edit();
+        StringBuilder sb = new StringBuilder("");
+        boolean firstTime = true;
+        for (ActivationCode c : codes) {
+            if (!firstTime) {
+                sb.append(",");
+            }
+            else {
+                firstTime = false;
+            }
+            sb.append(c.getActivationCode());
+        }
+        Log.d(logTag, "Activation Codes are " + sb.toString());
+        editor.putString(Authentication.ACTIVATION_CODES, sb.toString());
+        editor.commit();
+    }
+
+    public String[] getActivationCodes() {
+        spAuthentication = context.getSharedPreferences(AUTHENTICATION_FILENAME, Context.MODE_PRIVATE);
+        String activationCodes = spAuthentication.getString(Authentication.ACTIVATION_CODES, "");
+        return activationCodes.split(",");
     }
 
     public List<Long> getOrganizationIdList() {
@@ -195,6 +227,22 @@ public class SharedPreferencesUtil {
         return orgIdList;
     }
 
+    public List<String> getOrganizationNameList() {
+        spAuthentication = context.getSharedPreferences(AUTHENTICATION_FILENAME, Context.MODE_PRIVATE);
+        String orgListJson = spAuthentication.getString(Authentication.ORG_INFO, null);
+        List<String> orgNameList = new ArrayList<String>();
+        if (orgListJson != null) {
+            Gson gson = new Gson();
+            List<Org> orgList = gson.fromJson(orgListJson,
+                    new TypeToken<List<Org>>() {
+                    }.getType()); // myObject - instance of MyObject
+            for (Org o : orgList) {
+                orgNameList.add(o.getOrganizationName());
+            }
+        }
+        return orgNameList;
+    }
+
     private void addAuthenticationInfo(Authentication authentication) {
         if (authentication != null) {
             SharedPreferences.Editor editor = spAuthentication.edit();
@@ -208,6 +256,23 @@ public class SharedPreferencesUtil {
             Log.d("SPLASH", "User: " + authentication.getEmployeeName() + " authenticated!");
             editor.commit();
         }
+    }
+
+    public Authentication getAuthenticationInfo() {
+        spAuthentication = context.getSharedPreferences(AUTHENTICATION_FILENAME, Context.MODE_PRIVATE);
+        Authentication authentication = new Authentication();
+        authentication.setEmployeeName(spAuthentication.getString(Authentication.EMPLOYEE_NAME, ""));
+        authentication.setMobileNo(spAuthentication.getString(Authentication.EMPLOYEE_MOBILE, ""));
+
+        String orgListJson = spAuthentication.getString(Authentication.ORG_INFO, "");
+        if (orgListJson != null) {
+            Gson gson = new Gson();
+            List<Org> orgList = gson.fromJson(orgListJson,
+                    new TypeToken<List<Org>>() {
+                    }.getType()); // myObject - instance of MyObject
+            authentication.setOrganization(orgList);
+        }
+        return authentication;
     }
 
     private void addAuthorizationInfo(List<Authorization> authList) {

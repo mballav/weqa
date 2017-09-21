@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@color/colorTABtext"
+    >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/colorDarkGrey"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorDarkGrey"/>
+
+    <LinearLayout
+        android:id="@+id/teamText"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        >
+
+        <TextView
+            android:id="@+id/teamName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/colorDarkGrey"
+            android:textStyle="bold"
+            android:layout_gravity="left"
+            />
+
+        <TextView
+            android:id="@+id/teamNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textColor="@color/colorLightGrey"
+            android:layout_gravity="left"
+            />
+
+        <TextView
+            android:id="@+id/teamDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:textColor="@color/colorLightGrey"
+            android:layout_gravity="left"
+            />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/teamDetailArrow"
+        android:layout_width="40dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+        android:tint="@color/colorLightGrey"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="130dp"
+        android:layout_toLeftOf="@id/teamDetailArrow"
+        android:layout_marginRight="5dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+
+            <TextView
+                android:id="@+id/colocated"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:background="@drawable/circle_green"
+                android:layout_marginTop="0dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorDarkGrey"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorLightGrey"
+                android:text="Found"
+                android:textSize="10sp"
+                />
+
+<!--        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/distributedContainer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/distributed"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:background="@drawable/circle_blue"
+                android:layout_marginTop="0dp"
+                android:textSize="10sp"
+                android:textColor="@color/colorDarkGrey"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorLightGrey"
+                android:text="Distributed"
+                android:textSize="8sp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notFoundContainer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.34"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/notFound"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:background="@drawable/circle_grey"
+                android:layout_marginTop="0dp"
+                android:textSize="10sp"
+                android:textColor="@color/colorDarkGrey"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorLightGrey"
+                android:text="Not Found"
+                android:textSize="8sp"
+                />
+
+        </LinearLayout>-->
+    </LinearLayout>
+
+</RelativeLayout>

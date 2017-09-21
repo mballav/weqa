@@ -15,10 +15,23 @@ public class DatetimeUtil {
 
     private static final String LOG_TAG = "WEQA-LOG";
 
+    public static Date getDateFromGMT(String GMTString) {
+        try {
+            String firstPart = GMTString.substring(0, 19);
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = inputFormat.parse(firstPart);
+            return date;
+        }
+        catch (ParseException pe) {
+            Log.d(LOG_TAG, "Error parsing GMT Date");
+        }
+        return null;
+    }
+
     public static String getLocalDateTime(String GMTString) {
         try {
             String firstPart = GMTString.substring(0, 19);
-            Log.d(LOG_TAG, "First part of the date STRING is " + firstPart);
             SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = inputFormat.parse(firstPart);
@@ -27,7 +40,6 @@ public class DatetimeUtil {
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             outputFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
             String outputText = outputFormat.format(date);
-            Log.d(LOG_TAG, "FORMATTED DATE-------------------------------- is " + outputText);
             return outputText;
         }
         catch (ParseException pe) {

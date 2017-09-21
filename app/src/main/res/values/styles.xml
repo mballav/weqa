@@ -33,8 +33,27 @@
         <item name="tabTextColor">@color/colorTABtext</item>
     </style>
 
+    <style name="profiletext">
+        <item name="android:textColor">@color/colorTABtext</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">12dp</item>
+    </style>
+    <style name="createteamtext">
+        <item name="android:textColor">@color/colorDarkGrey</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+    <style name="profiletext2">
+        <item name="android:textColor">@color/colorTABtext</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">12dp</item>
+    </style>
     <style name="smallgreytext">
         <item name="android:textColor">@color/colorTABtext</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+    <style name="smallgreytextselected">
+        <item name="android:textColor">@color/colorTABtextSelected</item>
         <item name="android:textSize">10sp</item>
     </style>
     <style name="smalllightgreytext">

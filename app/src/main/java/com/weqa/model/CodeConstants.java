@@ -20,6 +20,7 @@ public interface CodeConstants {
     public static final String AC302 = "AC302";
     public static final String AC601 = "AC601";
 
+    public static final String RC01 = "RC01";
     public static final String RC10 = "RC10";
     public static final String RC20 = "RC20";
     public static final String RC30 = "RC30";
@@ -32,5 +33,8 @@ public interface CodeConstants {
     public static final String RC601 = "RC601";
     public static final String RC701 = "RC701";
     public static final String RC801 = "RC801";
+
+    public static final String QR_CODE_MEMBER = "0000";
+    public static final String QR_CODE_ITEM = "0001";
 
 }

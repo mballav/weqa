@@ -16,6 +16,7 @@ public class Authentication {
     public static final String ORG_INFO = "O";
     public static final String PRIVILEGE = "P";
     public static final String AUTH_TIME = "OT";
+    public static final String ACTIVATION_CODES = "AC";
 
     @SerializedName("employeeName")
     @Expose

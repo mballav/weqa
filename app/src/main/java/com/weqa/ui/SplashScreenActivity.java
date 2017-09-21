@@ -6,22 +6,37 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.common.StringUtils;
 import com.weqa.R;
 import com.weqa.model.AuthInput;
 import com.weqa.model.CodeConstants;
 import com.weqa.service.InstanceIdService;
 import com.weqa.service.RetrofitBuilder;
 import com.weqa.util.AuthAsyncTask;
+import com.weqa.util.AuthWithCodeAsyncTask;
 import com.weqa.util.GlobalExceptionHandler;
+import com.weqa.util.InputDialogUtil;
+import com.weqa.util.SharedPreferencesUtil;
 
 import retrofit2.Retrofit;
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity implements AuthAsyncTask.UpdateUI {
 
     private static final String LOG_TAG = "WEQA-LOG";
+
+    private Button register, connectCode;
+    private TextView orText;
+    private EditText code;
+    private LinearLayout codeContainer;
+    private SharedPreferencesUtil util;
 
     Thread thread = new Thread(){
         @Override
@@ -49,9 +64,20 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             Typeface tf = Typeface.createFromAsset(this.getAssets(), "font/HelveticaNeueMed.ttf");
 
-//            TextView appslogan = (TextView) findViewById(R.id.appslogan);
+            util = new SharedPreferencesUtil(this);
 
-//            appslogan.setTypeface(tf);
+            register = (Button) findViewById(R.id.register);
+            orText = (TextView) findViewById(R.id.ortext);
+            connectCode = (Button) findViewById(R.id.connectcode);
+            code = (EditText) findViewById(R.id.activationCode);
+            codeContainer = (LinearLayout) findViewById(R.id.codeContainer);
+
+            register.setTypeface(tf);
+            orText.setTypeface(tf);
+            connectCode.setTypeface(tf);
+
+        //TextView appslogan = (TextView) findViewById(R.id.appslogan);
+        //appslogan.setTypeface(tf);
 
         /*
         LocationTracker tracker = new LocationTracker(this);
@@ -66,10 +92,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
         */
 
-//        It should show approx. 909 Km
-//        Toast.makeText(getApplicationContext(), "Distance: " + LocationUtil.getDistance(50.3, -5.1, 58.4, -3.2), Toast.LENGTH_LONG).show();
+        //It should show approx. 909 Km
+        //Toast.makeText(getApplicationContext(), "Distance: " + LocationUtil.getDistance(50.3, -5.1, 58.4, -3.2), Toast.LENGTH_LONG).show();
 
-            authenticate();
+        authenticate();
         }
     }
 
@@ -83,6 +109,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         input.setAuthorizationCode(CodeConstants.AC20);
         input.setConfigurationCode(CodeConstants.AC30);
         input.setUuid(InstanceIdService.getAppInstanceId(SplashScreenActivity.this));
+//        input.setUuid("AS101");
         runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
         Log.d(LOG_TAG, "Waiting for response...");
     }
@@ -90,5 +117,58 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    public void updateUI() {
+
+        register.setVisibility(View.VISIBLE);
+        orText.setVisibility(View.VISIBLE);
+        codeContainer.setVisibility(View.VISIBLE);
+
+        connectCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // InputDialogUtil.showCodeInputDialog(SplashScreenActivity.this);
+                sendCode();
+            }
+        });
+    }
+
+    public void sendCode() {
+
+        String activationCode = code.getText().toString();
+
+        if (isCodeValid(activationCode)) {
+            Retrofit retrofit = RetrofitBuilder.getRetrofit();
+
+            Log.d(LOG_TAG, "Calling the API to authenticate...");
+            AuthWithCodeAsyncTask runner = new AuthWithCodeAsyncTask(retrofit, LOG_TAG, this);
+            AuthInput input = new AuthInput();
+//            input.setActivationCode(activationCode);
+            input.setAuthenticationCode(CodeConstants.AC10);
+            input.setAuthorizationCode(CodeConstants.AC20);
+            input.setConfigurationCode(CodeConstants.AC30);
+            input.setUuid(InstanceIdService.getAppInstanceId(this));
+            runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
+            Log.d(LOG_TAG, "Waiting for response...");
+        }
+        else {
+            Toast.makeText(this, "Invalid Code", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isCodeValid(String activationCode) {
+        String[] codes = util.getActivationCodes();
+        for (String c : codes) {
+            Log.d(LOG_TAG, "Code: " + c);
+        }
+        boolean valid = false;
+        for (String c : codes) {
+            if (c.equalsIgnoreCase(activationCode)) {
+                valid = true;
+                break;
+            }
+        }
+        return valid;
     }
 }

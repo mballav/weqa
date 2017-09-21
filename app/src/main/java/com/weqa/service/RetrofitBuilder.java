@@ -10,15 +10,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitBuilder {
 
     public static Retrofit getRetrofit() {
+
         //HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         //interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        //OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("http://10.0.2.2:60064/")
-                .baseUrl("http://yezloapp.azurewebsites.net/")
+                //.baseUrl("http://10.0.2.2:60064/")
+                .baseUrl("http://weqaapplication.azurewebsites.net/")
                 .addConverterFactory(GsonConverterFactory.create())
-//                .client(client)
+                //.client(client)
                 .build();
 
         return retrofit;

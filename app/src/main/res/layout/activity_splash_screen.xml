@@ -21,15 +21,106 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/weqalogo_v2_200"/>
 
-<!--    <TextView
-        android:id="@+id/appslogan"
+    <Button
+        android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Designed for ABW"
+        android:text="Register"
         android:textAlignment="center"
+        android:textColor="@color/colorLightGrey"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        android:minHeight="0dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/appname"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:background="@drawable/super_rounded_corner_button"
+        android:enabled="false"
+        android:clickable="false"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/ortext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OR"
+        android:textAlignment="center"
+        android:textColor="@color/colorLightGrey"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/register"
         android:layout_marginTop="20dp"
-        android:textSize="24sp"/>-->
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:id="@+id/codeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ortext"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/activationCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/edit_text_rectangle"
+                android:hint="Enter code here"
+                android:textStyle="italic"
+                android:textColor="@color/colorLightGrey"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:inputType="text"
+                android:layout_centerVertical="true"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/connectcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connect"
+                android:minHeight="0dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:textAlignment="center"
+                android:textColor="@color/colorLightGrey"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:background="@drawable/super_rounded_corner_button"
+                android:layout_centerVertical="true"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

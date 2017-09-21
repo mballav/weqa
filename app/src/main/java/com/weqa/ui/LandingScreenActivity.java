@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,6 +63,7 @@ import com.weqa.util.GlobalExceptionHandler;
 import com.weqa.util.QRCodeUtil;
 import com.weqa.util.SharedPreferencesUtil;
 import com.weqa.util.UIHelper;
+import com.weqa.widget.ContinuousCaptureActivity;
 import com.weqa.widget.SearchableSpinner;
 
 import java.io.File;
@@ -104,6 +106,7 @@ public class LandingScreenActivity extends AppCompatActivity
 
     private PhotoView floorplan;
     private TextView floorNumberText, listText;
+    private ImageView listIcon;
 
     private int originalBitmapWidth, originalBitmapHeight;
     private float hotspotSize;
@@ -206,6 +209,7 @@ public class LandingScreenActivity extends AppCompatActivity
         homeText.setTextColor(ContextCompat.getColor(this, R.color.colorTABtextSelected));
 
         listText = (TextView) findViewById(R.id.listtext);
+        listIcon = (ImageView) findViewById(R.id.listicon);
 
         RelativeLayout tapToEnlarge = (RelativeLayout) findViewById(R.id.taptoenlarge);
         tapToEnlarge.setOnTouchListener(this);
@@ -220,8 +224,10 @@ public class LandingScreenActivity extends AppCompatActivity
         if (v.getId() == R.id.taptoenlarge) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 listText.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorTABtext));
+                listIcon.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorTABtext));
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 listText.setTextColor(ContextCompat.getColor(v.getContext(), R.color.colorTABtextSelected));
+                listIcon.setColorFilter(ContextCompat.getColor(v.getContext(), R.color.colorTABtextSelected));
             }
             return false;
         }
@@ -257,6 +263,16 @@ public class LandingScreenActivity extends AppCompatActivity
                 listContainer.setVisibility(View.VISIBLE);
                 currentView = ViewType.LIST;
             }
+        }
+        else if (v.getId() == R.id.profilepicture) {
+            Intent i = new Intent(this, ProfileActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(i);
+        }
+        else if (v.getId() == R.id.menu4) {
+            Intent i = new Intent(this, TeamSummaryActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(i);
         }
         else if (v.getId() != R.id.menu1){
             Toast.makeText(v.getContext(), "Under Development", Toast.LENGTH_SHORT).show();

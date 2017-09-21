@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
+        android:tint="@color/colorLightGrey" />
+
+    <LinearLayout
+        android:id="@+id/topPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_group_black_24dp"
+            android:tint="@color/colorMENU"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Team"
+            android:textColor="@color/colorDarkGrey"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorLighterGrey"
+        android:layout_below="@id/topPanel"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp" />
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDarkGrey"
+        android:layout_below="@id/line1"
+        android:layout_marginTop="10dp" />
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line1"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+    <TableRow>
+
+        <TextView
+            android:text="Organization: "
+            android:gravity="left"
+            style="@style/createteamtext"
+            />
+
+        <Spinner
+            android:id="@+id/spinner"/>
+
+    </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="Name: "
+                android:gravity="left"
+                style="@style/createteamtext"
+                />
+
+            <EditText
+                android:id="@+id/teamName"/>
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:text="Purpose: "
+                android:gravity="left"
+                style="@style/createteamtext"
+                />
+
+            <EditText
+                android:id="@+id/teamPurpose"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+    <View
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDarkGrey"
+        android:layout_below="@id/tableLayout1"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:id="@+id/addMember"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/empty_circle"
+        android:text="+"
+        android:textSize="30sp"
+        android:textColor="@color/colorDarkGrey"
+        android:layout_below="@id/line3"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:id="@+id/addMemberText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addMember"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:text="Add members"
+        android:textSize="12sp"
+        android:textColor="@color/colorLightGrey"
+        />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:minHeight="0dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:textAlignment="center"
+        android:textColor="@color/colorLightGrey"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:background="@drawable/super_rounded_corner_button"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/memberList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/saveButton"
+        android:layout_below="@id/addMemberText"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        />
+
+</RelativeLayout>

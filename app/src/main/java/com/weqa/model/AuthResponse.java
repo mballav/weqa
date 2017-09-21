@@ -29,32 +29,9 @@ public class AuthResponse {
     @SerializedName("configuration")
     @Expose
     private Configuration configuration;
-
-    /**
-     * No args constructor for use in serialization
-     *
-     */
-    public AuthResponse() {
-    }
-
-    /**
-     *
-     * @param authentication
-     * @param authenticationCode
-     * @param authorization
-     * @param configuration
-     * @param configurationCode
-     * @param authorizationCode
-     */
-    public AuthResponse(String authenticationCode, String authorizationCode, String configurationCode, Authentication authentication, List<Authorization> authorization, Configuration configuration) {
-        super();
-        this.authenticationCode = authenticationCode;
-        this.authorizationCode = authorizationCode;
-        this.configurationCode = configurationCode;
-        this.authentication = authentication;
-        this.authorization = authorization;
-        this.configuration = configuration;
-    }
+    @SerializedName("activationCodes")
+    @Expose
+    private List<ActivationCode> activationCodes = null;
 
     public String getAuthenticationCode() {
         return authenticationCode;
@@ -104,4 +81,11 @@ public class AuthResponse {
         this.configuration = configuration;
     }
 
+    public List<ActivationCode> getActivationCodes() {
+        return activationCodes;
+    }
+
+    public void setActivationCodes(List<ActivationCode> activationCodes) {
+        this.activationCodes = activationCodes;
+    }
 }
