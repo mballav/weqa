@@ -7,8 +7,8 @@ android {
         applicationId "com.weqa"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 21
-        versionName "2.0.2"
+        versionCode 43
+        versionName "2.1.21"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

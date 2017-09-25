@@ -17,14 +17,14 @@ public class TeamMemberListData {
     ArrayList<TeamMemberListItem> members = new ArrayList<TeamMemberListItem>();
 
     public TeamMemberListData() {
-        for (int i = 0; i<3; i++) {
+/*        for (int i = 0; i<3; i++) {
             TeamMemberListItem item = new TeamMemberListItem();
             item.setFirstName(fnames[i]);
             item.setLastName(lnames[i]);
             item.setDesignation(desigs[i]);
             item.setMobile(mobile[i]);
             members.add(item);
-        }
+        }*/
     }
 
     public ArrayList<TeamMemberListItem> getListData() {

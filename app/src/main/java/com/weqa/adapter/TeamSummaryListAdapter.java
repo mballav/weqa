@@ -1,13 +1,17 @@
 package com.weqa.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.weqa.R;
@@ -27,18 +31,18 @@ public class TeamSummaryListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     class TeamSummaryItemHolder extends RecyclerView.ViewHolder {
 
-        private TextView teamName, teamNumber, teamDate;
+        private TextView teamName, teamNumber;
+        //private TextView teamDate;
         private TextView colocated;
-        private ImageView teamDetailArrow;
+        private RelativeLayout container;
 
         public TeamSummaryItemHolder(View itemView) {
             super(itemView);
             teamName = (TextView)itemView.findViewById(R.id.teamName);
             teamNumber = (TextView)itemView.findViewById(R.id.teamNumber);
-            teamDate = (TextView)itemView.findViewById(R.id.teamDate);
-            teamDetailArrow = (ImageView) itemView.findViewById(R.id.teamDetailArrow);
+            //teamDate = (TextView)itemView.findViewById(R.id.teamDate);
             colocated = (TextView) itemView.findViewById(R.id.colocated);
-
+            container = (RelativeLayout) itemView.findViewById(R.id.container);
         }
 
     }
@@ -56,12 +60,12 @@ public class TeamSummaryListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     protected LayoutInflater inflater;
     protected TeamSummaryListData itemData;
-    protected Context c;
+    protected Activity activity;
 
-    public TeamSummaryListAdapter(TeamSummaryListData itemData, Context c){
-        inflater = LayoutInflater.from(c);
+    public TeamSummaryListAdapter(TeamSummaryListData itemData, Activity activity){
+        inflater = LayoutInflater.from(activity);
         this.itemData = itemData;
-        this.c = c;
+        this.activity = activity;
         Log.d(LOG_TAG, "item data size = " + itemData.getListData().size());
         for (TeamSummaryListItem t : itemData.getListData()) {
             Log.d(LOG_TAG, "ORG FLAG : " + t.isOrg());
@@ -101,23 +105,40 @@ public class TeamSummaryListAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         final TeamSummaryListItem item = this.itemData.getListData().get(position);
         switch (viewHolder.getItemViewType()) {
             case 1:
-                TeamSummaryItemHolder holder = (TeamSummaryItemHolder) viewHolder;
+                final TeamSummaryItemHolder holder = (TeamSummaryItemHolder) viewHolder;
                 holder.teamName.setText(item.getTeamName());
                 holder.teamNumber.setText(item.getNumberOfMembers() + " Members");
-                holder.teamDate.setText("Created - " + item.getFormattedDate());
+//                holder.teamDate.setText("Created - " + item.getFormattedDate());
                 holder.colocated.setText("" + item.getColocated());
                 if (item.getColocated() == 0) {
-                    holder.colocated.setBackgroundResource(R.drawable.circle_grey);
+                    holder.colocated.setBackgroundResource(R.drawable.background_round_avail_red);
                 }
                 else {
-                    holder.colocated.setBackgroundResource(R.drawable.circle_green);
+                    holder.colocated.setBackgroundResource(R.drawable.background_round_avail_green);
                 }
-                holder.teamDetailArrow.setOnClickListener(new View.OnClickListener() {
+                holder.container.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent i = new Intent(view.getContext(), TeamDetailActivity.class);
                         i.putExtra("TEAM_ID", item.getTeamId());
-                        view.getContext().startActivity(i);
+                        i.putExtra("ORG_ID", item.getOrgId());
+                        activity.startActivityForResult(i, 10);
+                    }
+                });
+
+                holder.container.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent event) {
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            holder.container.setBackgroundResource(R.drawable.avail_list_rectangle2);
+//                            holder.teamName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorTABtextSelected));
+//                            holder.teamNumber.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorTABtextSelected));
+                        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                            holder.container.setBackgroundResource(R.drawable.avail_list_rectangle);
+//                            holder.teamName.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorMENU));
+//                            holder.teamNumber.setTextColor(ContextCompat.getColor(view.getContext(), R.color.colorMENU));
+                        }
+                        return false;
                     }
                 });
                 break;

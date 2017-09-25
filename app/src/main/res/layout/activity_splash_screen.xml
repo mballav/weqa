@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlack">
+    android:background="@color/colorBlack"
+    android:id="@+id/container">
 
     <View
         android:id="@+id/anchor"
@@ -26,8 +27,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register"
+        android:textStyle="italic"
         android:textAlignment="center"
-        android:textColor="@color/colorLightGrey"
+        android:textColor="@color/colorGrey"
         android:textAllCaps="false"
         android:textSize="14sp"
         android:minHeight="0dp"
@@ -64,7 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ortext"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:visibility="gone"
         >
@@ -84,12 +86,14 @@
                 android:background="@drawable/edit_text_rectangle"
                 android:hint="Enter code here"
                 android:textStyle="italic"
+                android:minHeight="0dp"
                 android:textColor="@color/colorLightGrey"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:inputType="text"
+                android:textSize="14sp"
                 android:layout_centerVertical="true"
                 />
 
@@ -122,5 +126,16 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/appname"
+        android:layout_marginTop="50dp"
+        android:indeterminateDrawable="@drawable/progress"
+        android:visibility="gone"></ProgressBar>
 
 </RelativeLayout>

@@ -6,6 +6,8 @@ package com.weqa.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Comparator;
+
 public class CollaborationResponse {
 
     @SerializedName("orgId")
@@ -108,4 +110,16 @@ public class CollaborationResponse {
         this.notFound = notFound;
     }
 
+    public static Comparator<CollaborationResponse> OrgNameComparator
+            = new Comparator<CollaborationResponse>() {
+
+        public int compare(CollaborationResponse a1, CollaborationResponse a2) {
+
+            String n1 = a1.getOrgName().toUpperCase();
+            String n2 = a2.getOrgName().toUpperCase();
+
+            //ascending order
+            return n1.compareTo(n2);
+        }
+    };
 }

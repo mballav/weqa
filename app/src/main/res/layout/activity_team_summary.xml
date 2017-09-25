@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorTABtext">
+    android:background="@color/colorMENU">
 
     <LinearLayout
-        android:id="@+id/topPanel"
+        android:id="@+id/topPanel1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/colorTABtext"
-        android:paddingBottom="4dp"
-        android:paddingTop="15dp">
+        android:background="@color/colorMENU"
+        android:paddingBottom="5dp"
+        android:paddingTop="10dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -26,7 +26,8 @@
                 android:id="@+id/profilepicture"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/userimg"
+                android:src="@drawable/ic_person_black_24dp"
+                android:tint="@color/colorTABtextSelected"
                 app:civ_border_color="@color/colorTABtextSelected"
                 app:civ_border_width="1dp" />
 
@@ -37,48 +38,48 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:gravity="left"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="10dp">
 
 
-<!--<RelativeLayout
-                    android:id="@+id/layout1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+            <!--<RelativeLayout
+                                android:id="@+id/layout1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                >
 
-                    <ImageView
-                        android:id="@+id/searchIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/search_icon"/>
+                                <ImageView
+                                    android:id="@+id/searchIcon"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginEnd="10dp"
+                                    android:src="@drawable/search_icon"/>
 
-                    <com.weqa.widget.SearchableSpinner
-                        android:id="@+id/spinner"
-                        style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/planets"
-                        android:background="@null"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="40dp"
-                        app:searchBackgroundColor="@color/colorPrimaryDark"
-                        app:hintText="Search"
-                        app:hintTextColor="@color/colorDarkGrey"/>
+                                <com.weqa.widget.SearchableSpinner
+                                    android:id="@+id/spinner"
+                                    style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:entries="@array/planets"
+                                    android:background="@null"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginEnd="40dp"
+                                    app:searchBackgroundColor="@color/colorPrimaryDark"
+                                    app:hintText="Search"
+                                    app:hintTextColor="@color/colorDarkGrey"/>
 
-                </RelativeLayout>-->
+                            </RelativeLayout>-->
 
-                <TextView
-                    android:id="@+id/text1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Collaboration Area"
-                    android:textColor="@color/colorDarkGrey"
-                    android:textSize="30sp"
-                    />
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Collaboration Area"
+                android:textColor="@color/colorTABtext"
+                android:textSize="18sp" />
 
 
         </LinearLayout>
@@ -89,71 +90,65 @@
         android:id="@+id/nextToTopPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topPanel"
-        android:paddingTop="10dp"
-        android:paddingBottom="15dp"
-        >
-
-        <ImageView
-            android:id="@+id/createTeamArrow"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
-            android:tint="@color/colorLightGrey"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="5dp"
-            />
-
-        <View
-            android:id="@+id/line1"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorDarkGrey"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            />
+        android:layout_below="@id/topPanel1"
+        android:layout_marginTop="5dp"
+        android:background="@color/colorMENU"
+        android:paddingBottom="5dp"
+        android:paddingTop="10dp">
 
         <LinearLayout
             android:id="@+id/groupImageContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:layout_centerHorizontal="true">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/groupImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_group_add_black_24dp"
-                android:tint="@color/colorMENU"
-                />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/createTeam"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/createTeamImage"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_group_add_black_24dp"
+                    android:tint="@color/colorTABtextSelected" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Create Team"
-                android:textSize="16sp"
-                android:textColor="@color/colorDarkGrey"
-                />
+                android:layout_weight="0.8"
+                android:gravity="left|center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/createTeamText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="Create Team"
+                    android:textColor="@color/colorTABtext"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/groupImageContainer"
-            android:background="@color/colorLighterGrey"
-            android:layout_marginTop="10dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"/>
+        <!--        <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/groupImageContainer"
+                    android:background="@color/colorLighterGrey"
+                    android:layout_marginTop="10dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"/> -->
 
     </RelativeLayout>
 
@@ -177,7 +172,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_home_black_24dp"
-                android:tint="@color/colorTABtext"/>
+                android:tint="@color/colorTABtext" />
 
             <TextView
                 android:id="@+id/textView1"
@@ -202,7 +197,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_format_list_checks"
-                android:tint="@color/colorTABtext"/>
+                android:tint="@color/colorTABtext" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -243,7 +238,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_group_black_24dp"
-                android:tint="@color/colorTABtextSelected"/>
+                android:tint="@color/colorTABtextSelected" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -266,7 +261,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/ic_more_horiz_black_24dp"
-                android:tint="@color/colorTABtext"/>
+                android:tint="@color/colorTABtext" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -279,12 +274,39 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/teamSummaryList"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/nextToTopPanel"
         android:layout_above="@id/bottomPanel"
-        />
+        android:layout_below="@id/nextToTopPanel"
+        android:background="@color/colorPrimaryDark">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/teamSummaryList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminateDrawable="@drawable/progress"></ProgressBar>
+
+        <TextView
+            android:id="@+id/noteams"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="No Active Teams"
+            android:textColor="@color/colorLightGrey"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

@@ -5,15 +5,20 @@ package com.weqa.model.json;
  */
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 public class AddTeamMemberInput {
 
     @SerializedName("TeamId")
     @Expose
     private Integer teamId;
-    @SerializedName("Uuid")
+    @SerializedName("OrgId")
     @Expose
-    private String uuid;
+    private Integer orgId;
+    @SerializedName("UuidList")
+    @Expose
+    private List<UuidList> uuidList = null;
+
 
     public Integer getTeamId() {
         return teamId;
@@ -23,11 +28,19 @@ public class AddTeamMemberInput {
         this.teamId = teamId;
     }
 
-    public String getUuid() {
-        return uuid;
+    public List<UuidList> getUuidList() {
+        return uuidList;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setUuidList(List<UuidList> uuidList) {
+        this.uuidList = uuidList;
+    }
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
     }
 }

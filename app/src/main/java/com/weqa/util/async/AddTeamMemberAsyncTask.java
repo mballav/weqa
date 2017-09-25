@@ -22,8 +22,8 @@ import retrofit2.Retrofit;
 
 public class AddTeamMemberAsyncTask extends AsyncTask<Object, String, String> {
 
-    public static interface UpdateUI {
-        public void updateUI();
+    public static interface TeamUpdated {
+        public void teamUpdated();
     }
 
     public static final String STATUS_OK = "ok";
@@ -74,12 +74,12 @@ public class AddTeamMemberAsyncTask extends AsyncTask<Object, String, String> {
         catch (IOException ioe) {
             Log.d(logTag, "Error in retrofit call" + ioe.getMessage());
             final Context context = this.activity.getApplication();
-            this.activity.runOnUiThread(new Runnable() {
+/*            this.activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Toast.makeText(context, "Connectivity Problem. Please try again later!", Toast.LENGTH_LONG).show();
                 }
-            });
+            });*/
         }
     }
 
@@ -100,7 +100,7 @@ public class AddTeamMemberAsyncTask extends AsyncTask<Object, String, String> {
             this.activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((CreateTeamAsyncTask.UpdateUI) activity).updateUI();
+                    ((AddTeamMemberAsyncTask.TeamUpdated) activity).teamUpdated();
                 }
             });
         }

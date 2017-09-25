@@ -11,6 +11,9 @@ public class TeamDetailInput {
     @SerializedName("TeamId")
     @Expose
     private Integer teamId;
+    @SerializedName("OrgId")
+    @Expose
+    private Integer orgId;
 
     public Integer getTeamId() {
         return teamId;
@@ -18,6 +21,14 @@ public class TeamDetailInput {
 
     public void setTeamId(Integer teamId) {
         this.teamId = teamId;
+    }
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
     }
 }
 

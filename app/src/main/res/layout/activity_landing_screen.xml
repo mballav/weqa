@@ -151,7 +151,8 @@
                     android:id="@+id/profilepicture"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/userimg"
+                    android:src="@drawable/ic_person_black_24dp"
+                    android:tint="@color/colorTABtextSelected"
                     app:civ_border_color="@color/colorTABtextSelected"
                     app:civ_border_width="1dp" />
 

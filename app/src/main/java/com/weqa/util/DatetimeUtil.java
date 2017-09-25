@@ -29,6 +29,25 @@ public class DatetimeUtil {
         return null;
     }
 
+    public static String getLocalDate(String GMTString) {
+        try {
+            String firstPart = GMTString.substring(0, 19);
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            inputFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date date = inputFormat.parse(firstPart);
+
+            // Potentially use the default locale. This will use the local time zone already.
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy");
+            outputFormat.setTimeZone(TimeZone.getTimeZone("Australia/Sydney"));
+            String outputText = outputFormat.format(date);
+            return outputText;
+        }
+        catch (ParseException pe) {
+            Log.d(LOG_TAG, "Error parsing GMT Date");
+        }
+        return "";
+    }
+
     public static String getLocalDateTime(String GMTString) {
         try {
             String firstPart = GMTString.substring(0, 19);

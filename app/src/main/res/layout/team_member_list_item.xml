@@ -2,46 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:padding="5dp">
+    android:gravity="left"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:background="@drawable/avail_list_rectangle"
+    android:padding="5dp"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/name"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorDarkGrey"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        />
+        android:orientation="horizontal"
+        android:gravity="left"
+        android:layout_gravity="left"
+        >
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:background="@color/colorDarkGrey"/>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorMENU"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            />
 
-    <TextView
-        android:id="@+id/designation"
-        android:layout_width="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorDarkGrey"
-        android:textSize="14sp"
-        />
+        <TextView
+            android:id="@+id/designation"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorMENU"
+            android:textSize="12sp"
+            />
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:background="@color/colorDarkGrey"/>
-
+    </LinearLayout>
     <TextView
         android:id="@+id/mobile"
         android:layout_width="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorDarkGrey"
-        android:textSize="14sp"
+        android:textColor="@color/colorMENU"
+        android:textSize="12sp"
+        android:gravity="left"
+        android:layout_gravity="left"
+        android:layout_marginTop="5dp"
         />
 
 </LinearLayout>

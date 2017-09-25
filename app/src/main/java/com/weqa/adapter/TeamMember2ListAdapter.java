@@ -2,6 +2,7 @@ package com.weqa.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +21,14 @@ public class TeamMember2ListAdapter extends RecyclerView.Adapter<TeamMember2List
 
     class TeamMemberItemHolder extends RecyclerView.ViewHolder {
 
-        private TextView name, designation, mobile, location;
+        private TextView name, mobile, designation, location;
 
         public TeamMemberItemHolder(View itemView) {
             super(itemView);
             name = (TextView)itemView.findViewById(R.id.name);
-            designation = (TextView)itemView.findViewById(R.id.designation);
             mobile = (TextView)itemView.findViewById(R.id.mobile);
-            location = (TextView) itemView.findViewById(R.id.location);
+            location = (TextView) itemView.findViewById(R.id.locationText);
+            designation = (TextView) itemView.findViewById(R.id.designation);
         }
 
     }
@@ -56,9 +57,11 @@ public class TeamMember2ListAdapter extends RecyclerView.Adapter<TeamMember2List
     public void onBindViewHolder(TeamMember2ListAdapter.TeamMemberItemHolder holder, int position) {
         final TeamMemberListItem item = this.itemData.getListData().get(position);
         holder.name.setText(item.getFirstName() + " " + item.getLastName());
-        holder.designation.setText(item.getDesignation());
+        holder.designation.setText(" - " + item.getDesignation());
         holder.mobile.setText(item.getMobile());
-        holder.location.setText(item.getLocation());
+        if (item.getLocation() != null && !item.getLocation().isEmpty()) {
+            holder.location.setText(item.getFloorLevel() + ", " + item.getLocation());
+        }
     }
 
     @Override

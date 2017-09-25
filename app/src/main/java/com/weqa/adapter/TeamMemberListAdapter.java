@@ -59,7 +59,7 @@ public class TeamMemberListAdapter extends RecyclerView.Adapter<TeamMemberListAd
     public void onBindViewHolder(TeamMemberListAdapter.TeamMemberItemHolder holder, int position) {
         final TeamMemberListItem item = this.itemData.getListData().get(position);
         holder.name.setText(item.getFirstName() + " " + item.getLastName());
-        holder.designation.setText(item.getDesignation());
+        holder.designation.setText("- " + item.getDesignation());
         holder.mobile.setText(item.getMobile());
     }
 

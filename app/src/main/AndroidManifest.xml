@@ -42,8 +42,9 @@
         <activity android:name=".ui.ProfileActivity" />
         <activity android:name=".widget.ContinuousCaptureActivity" />
         <activity android:name=".widget.CustomQRScannerActivity" />
-        <activity android:name=".ui.TeamSummaryActivity"></activity>
-        <activity android:name=".ui.CreateTeamActivity" />
+        <activity android:name=".ui.TeamSummaryActivity">
+        </activity>
+        <activity android:name=".ui.CreateTeamActivity" android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ui.TeamDetailActivity"></activity>
     </application>
 

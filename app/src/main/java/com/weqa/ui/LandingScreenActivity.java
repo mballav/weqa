@@ -533,7 +533,7 @@ public class LandingScreenActivity extends AppCompatActivity
                     bookQRCodeItem(qrCode);
                 }
                 else {
-                    DialogUtil.showOkDialog(this, "Invalid QR Code: " + qrCode, false, false);
+                    DialogUtil.showOkDialog(this, "Invalid WEQA Code", false, false);
                 }
             }
         } else {

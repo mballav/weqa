@@ -40,7 +40,7 @@ public class TeamDetailResponse {
     private Boolean teamCreator;
     @SerializedName("floorLevel")
     @Expose
-    private Integer floorLevel;
+    private String floorLevel;
     @SerializedName("buildingAddress")
     @Expose
     private String buildingAddress;
@@ -136,11 +136,11 @@ public class TeamDetailResponse {
         this.teamCreator = teamCreator;
     }
 
-    public Integer getFloorLevel() {
+    public String getFloorLevel() {
         return floorLevel;
     }
 
-    public void setFloorLevel(Integer floorLevel) {
+    public void setFloorLevel(String floorLevel) {
         this.floorLevel = floorLevel;
     }
 

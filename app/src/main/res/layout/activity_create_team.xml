@@ -3,17 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/container"
+    android:background="@color/colorMENU"
+    android:focusableInTouchMode="true">
 
     <ImageView
+        android:id="@+id/backButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
         android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
-        android:tint="@color/colorLightGrey" />
+        android:tint="@color/colorLightGrey"
+        android:scaleType="fitXY"
+        />
 
     <LinearLayout
         android:id="@+id/topPanel"
@@ -27,87 +31,75 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_group_black_24dp"
-            android:tint="@color/colorMENU"
+            android:tint="@color/colorTABtextSelected"
             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
             android:text="Create Team"
-            android:textColor="@color/colorDarkGrey"
-            android:textStyle="bold"
+            android:textColor="@color/colorTABtext"
             android:textSize="18sp"
             />
 
     </LinearLayout>
 
     <View
-        android:id="@+id/line1"
+        android:id="@+id/line2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorLighterGrey"
         android:layout_below="@id/topPanel"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp" />
+        android:layout_marginTop="15dp" />
 
-    <View
-        android:id="@+id/line2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorDarkGrey"
-        android:layout_below="@id/line1"
-        android:layout_marginTop="10dp" />
-
-    <TableLayout
+    <LinearLayout
         android:id="@+id/tableLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/line1"
-        android:layout_marginTop="10dp"
+        android:layout_below="@id/line2"
+        android:layout_marginTop="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:orientation="vertical"
         >
-    <TableRow>
-
-        <TextView
-            android:text="Organization: "
+        <Spinner
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner"
+            android:popupBackground="@color/colorMENU"
+            android:background="@color/colorMENU"
             android:gravity="left"
-            style="@style/createteamtext"
             />
 
-        <Spinner
-            android:id="@+id/spinner"/>
-
-    </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:text="Name: "
+            <EditText
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:id="@+id/teamName"
+                android:textColor="@color/colorTABtext"
+                android:background="@color/colorMENU"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:hint="Name"
+                android:textSize="12sp"
                 android:gravity="left"
-                style="@style/createteamtext"
+                android:padding="4dp"
                 />
 
             <EditText
-                android:id="@+id/teamName"/>
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:text="Purpose: "
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:id="@+id/teamPurpose"
+                android:textColor="@color/colorTABtext"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:hint="Purpose (optional)"
                 android:gravity="left"
-                style="@style/createteamtext"
-                />
+                android:textSize="12sp"
+                android:padding="4dp"
+                android:background="@color/colorMENU"/>
 
-            <EditText
-                android:id="@+id/teamPurpose"/>
-
-        </TableRow>
-
-    </TableLayout>
+    </LinearLayout>
 
     <View
         android:id="@+id/line3"
@@ -117,34 +109,41 @@
         android:layout_below="@id/tableLayout1"
         android:layout_marginTop="10dp" />
 
-    <TextView
-        android:id="@+id/addMember"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:background="@drawable/empty_circle"
-        android:text="+"
-        android:textSize="30sp"
-        android:textColor="@color/colorDarkGrey"
-        android:layout_below="@id/line3"
-        android:layout_marginTop="5dp"
-        android:layout_centerHorizontal="true"
-        />
-
-    <TextView
-        android:id="@+id/addMemberText"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/nextToTopPanel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/addMember"
-        android:layout_marginTop="5dp"
-        android:layout_centerHorizontal="true"
-        android:text="Add members"
-        android:textSize="12sp"
-        android:textColor="@color/colorLightGrey"
-        />
+        android:layout_below="@id/line3"
+        android:background="@color/colorPrimaryDark"
+        android:paddingBottom="10dp"
+        android:paddingTop="5dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
+        <ImageView
+            android:id="@+id/addMember"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_add_circle_outline_black_24dp"
+            android:tint="@color/colorTABtextSelected"
+            android:scaleType="fitXY"
+            />
+
+        <TextView
+            android:id="@+id/addMemberText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Add members"
+            android:textSize="12sp"
+            android:textColor="@color/colorTABtext"
+            />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Save"
         android:minHeight="0dp"
@@ -153,23 +152,38 @@
         android:textAlignment="center"
         android:textColor="@color/colorLightGrey"
         android:textAllCaps="false"
-        android:textSize="14sp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:background="@drawable/super_rounded_corner_button"
-        android:layout_centerHorizontal="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:background="@color/colorMENU"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/memberList"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/saveButton"
-        android:layout_below="@id/addMemberText"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        />
+        android:layout_below="@id/nextToTopPanel"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@color/colorPrimaryDark"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/memberList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminateDrawable="@drawable/progress"></ProgressBar>
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

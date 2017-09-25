@@ -4,17 +4,19 @@ import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.common.StringUtils;
 import com.weqa.R;
 import com.weqa.model.AuthInput;
 import com.weqa.model.CodeConstants;
@@ -23,12 +25,12 @@ import com.weqa.service.RetrofitBuilder;
 import com.weqa.util.AuthAsyncTask;
 import com.weqa.util.AuthWithCodeAsyncTask;
 import com.weqa.util.GlobalExceptionHandler;
-import com.weqa.util.InputDialogUtil;
 import com.weqa.util.SharedPreferencesUtil;
+import com.weqa.util.ui.KeyboardUtil;
 
 import retrofit2.Retrofit;
 
-public class SplashScreenActivity extends AppCompatActivity implements AuthAsyncTask.UpdateUI {
+public class SplashScreenActivity extends AppCompatActivity implements AuthAsyncTask.UpdateUI, View.OnTouchListener {
 
     private static final String LOG_TAG = "WEQA-LOG";
 
@@ -37,6 +39,7 @@ public class SplashScreenActivity extends AppCompatActivity implements AuthAsync
     private EditText code;
     private LinearLayout codeContainer;
     private SharedPreferencesUtil util;
+    private ProgressBar progressBar;
 
     Thread thread = new Thread(){
         @Override
@@ -76,6 +79,14 @@ public class SplashScreenActivity extends AppCompatActivity implements AuthAsync
             orText.setTypeface(tf);
             connectCode.setTypeface(tf);
 
+            RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
+
+            connectCode.setOnTouchListener(this);
+            container.setOnTouchListener(this);
+            code.setOnTouchListener(this);
+
+            progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         //TextView appslogan = (TextView) findViewById(R.id.appslogan);
         //appslogan.setTypeface(tf);
 
@@ -99,6 +110,27 @@ public class SplashScreenActivity extends AppCompatActivity implements AuthAsync
         }
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        if (v.getId() == R.id.connectcode) {
+            Button b = (Button) v;
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                b.setBackgroundColor(ContextCompat.getColor(v.getContext(), R.color.colorTABtextSelected));
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                b.setBackgroundColor(ContextCompat.getColor(v.getContext(), android.R.color.transparent));
+            }
+            KeyboardUtil.hideSoftKeyboard(this);
+        }
+        else if (v.getId() == R.id.activationCode) {
+            // TODO
+        }
+        else if (v.getId() != R.id.register){
+            KeyboardUtil.hideSoftKeyboard(this);
+        }
+        return false;
+    }
+
     private void authenticate() {
         Retrofit retrofit = RetrofitBuilder.getRetrofit();
 
@@ -109,7 +141,6 @@ public class SplashScreenActivity extends AppCompatActivity implements AuthAsync
         input.setAuthorizationCode(CodeConstants.AC20);
         input.setConfigurationCode(CodeConstants.AC30);
         input.setUuid(InstanceIdService.getAppInstanceId(SplashScreenActivity.this));
-//        input.setUuid("AS101");
         runner.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input);
         Log.d(LOG_TAG, "Waiting for response...");
     }
@@ -139,12 +170,19 @@ public class SplashScreenActivity extends AppCompatActivity implements AuthAsync
         String activationCode = code.getText().toString();
 
         if (isCodeValid(activationCode)) {
+
+            register.setVisibility(View.GONE);
+            orText.setVisibility(View.GONE);
+            codeContainer.setVisibility(View.GONE);
+
+            progressBar.setVisibility(View.VISIBLE);
+
             Retrofit retrofit = RetrofitBuilder.getRetrofit();
 
             Log.d(LOG_TAG, "Calling the API to authenticate...");
             AuthWithCodeAsyncTask runner = new AuthWithCodeAsyncTask(retrofit, LOG_TAG, this);
             AuthInput input = new AuthInput();
-//            input.setActivationCode(activationCode);
+            input.setActivationCode(activationCode);
             input.setAuthenticationCode(CodeConstants.AC10);
             input.setAuthorizationCode(CodeConstants.AC20);
             input.setConfigurationCode(CodeConstants.AC30);

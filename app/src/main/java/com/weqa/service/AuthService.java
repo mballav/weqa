@@ -41,7 +41,7 @@ public interface AuthService {
     @POST("api/security/GetTeamDetail")
     Call<List<TeamDetailResponse>> teamDetail(@Body TeamDetailInput input);
 
-    @POST("api/security/AddTeamMember")
+    @POST("api/security/AddMultipleTeamMember")
     Call<String> addTeamMember(@Body AddTeamMemberInput input);
 
     @POST("api/security/CreateTeam")

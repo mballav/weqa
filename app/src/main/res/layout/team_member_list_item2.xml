@@ -2,81 +2,67 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:background="@drawable/avail_list_rectangle"
     >
 
     <LinearLayout
-        android:id="@+id/topPanel"
+        android:id="@+id/topPanel1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="left"
         android:layout_alignParentTop="true">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.33"
-            android:gravity="center"
-            android:orientation="vertical">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorMENU"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            />
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorDarkGrey"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/designation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorMENU"
+            android:textSize="12sp"
+            />
+    </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.33"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/designation"
-                android:layout_width="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorDarkGrey"
-                android:textSize="12sp"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.34"
-            android:gravity="center"
-            android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/nextToTopPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topPanel1"
+        android:layout_marginTop="5dp"
+        android:gravity="left">
 
             <TextView
                 android:id="@+id/mobile"
                 android:layout_width="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorDarkGrey"
+                android:textColor="@color/colorMENU"
                 android:textSize="12sp"
                 />
-
-        </LinearLayout>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/location"
+        android:id="@+id/locationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topPanel"
-        android:layout_marginTop="5dp"
         android:layout_alignParentStart="true"
-        android:textColor="@color/colorDarkGrey"
+        android:layout_below="@id/nextToTopPanel"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorMENU"
         android:textSize="12sp"
         />
 </RelativeLayout>

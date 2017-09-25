@@ -23,6 +23,16 @@ public class TeamMemberListItem implements Parcelable {
 
     private String location;
 
+    private String floorLevel;
+
+    public String getFloorLevel() {
+        return floorLevel;
+    }
+
+    public void setFloorLevel(String floorLevel) {
+        this.floorLevel = floorLevel;
+    }
+
     public String getLocation() {
         return location;
     }

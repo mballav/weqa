@@ -11,6 +11,8 @@ public class TeamSummaryListItem {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
 
+    private int orgId;
+
     private boolean isOrg;
 
     private String orgName;
@@ -103,5 +105,13 @@ public class TeamSummaryListItem {
 
     public void setOrgName(String orgName) {
         this.orgName = orgName;
+    }
+
+    public int getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(int orgId) {
+        this.orgId = orgId;
     }
 }

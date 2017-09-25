@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.weqa.model.Authorization;
+import com.weqa.model.CodeConstants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,7 +44,7 @@ public class QRCodeUtil {
     public boolean isQRCodeValid(String qrCode) {
         String[] tokens = qrCode.split(",");
 
-        if (tokens.length < 4)
+        if ((tokens.length != 4) || (tokens[0].startsWith(CodeConstants.QR_CODE_MEMBER)))
             return false;
 
         String codeType = tokens[0];

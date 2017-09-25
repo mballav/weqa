@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -32,13 +33,16 @@ import java.util.List;
  */
 public class CustomQRScannerActivity extends Activity implements View.OnClickListener {
 
+    private static final String LOG_TAG = "WEQA-LOG";
+
     private DecoratedBarcodeView barcodeView;
     private BeepManager beepManager;
 
     private List<String> previousCodes = new ArrayList<String>();
     private ArrayList<TeamMemberListItem> alreadyAddedUsers = new ArrayList<TeamMemberListItem>();
+    private ArrayList<TeamMemberListItem> newlyAddedUsers = new ArrayList<TeamMemberListItem>();
 
-    private long orgId;
+    private long orgId, screenId;
 
     private BarcodeCallback callback = new BarcodeCallback() {
         @Override
@@ -49,7 +53,6 @@ public class CustomQRScannerActivity extends Activity implements View.OnClickLis
             }
 
             if ((previousCodes.indexOf(code) != -1)) {
-                barcodeView.setStatusText("User already added!");
                 return;
             }
 
@@ -58,15 +61,15 @@ public class CustomQRScannerActivity extends Activity implements View.OnClickLis
                 return;
             }
 
-            if (!isUserFromAcceptableOrg(code)) {
-                barcodeView.setStatusText("User does not belong to this organization!");
-                return;
-            }
-
             String uuid = getUuid(code);
 
             if (isUserAlreadyPartOfTeam(uuid)) {
                 barcodeView.setStatusText("User already added!");
+                return;
+            }
+
+            if (!isUserFromAcceptableOrg(code)) {
+                barcodeView.setStatusText("User does not belong to this organization!");
                 return;
             }
 
@@ -89,8 +92,14 @@ public class CustomQRScannerActivity extends Activity implements View.OnClickLis
 
         Intent intent = getIntent();
 
-        orgId = intent.getLongExtra("ORG_ID", 0);
+        orgId = intent.getIntExtra("ORG_ID", 0);
+        screenId = intent.getIntExtra("SCREEN_ID", 0);
+
         this.alreadyAddedUsers = intent.getParcelableArrayListExtra("EXISTING_USERS");
+
+        printUsers();
+
+        Log.d(LOG_TAG, "org id inside CustomQRScannerActivity is ---------------------- " + orgId);
 
         barcodeView = (DecoratedBarcodeView) findViewById(R.id.barcode_scanner);
         barcodeView.decodeContinuous(callback);
@@ -104,10 +113,78 @@ public class CustomQRScannerActivity extends Activity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
+/*        String qrCode1 = "0000,cDb0EVR9cxA,1_2,TestUser,One,Business Analyst,0400904480";
+        String qrCode2 = "0000,ftGkQAQyV6Q,1,Deborah,McCarthy,Project Manager,0405983938";
+        String qrCode3 = "0000,dynEls2Wytc,1,Bertrand,Cheminat,Business Manager,0405324938";
+
+        testAddCode(qrCode1);
+        testAddCode(qrCode2);
+        testAddCode(qrCode3);
+*/
         Intent intent = new Intent();
-        intent.putParcelableArrayListExtra("NEW_USER_LIST", alreadyAddedUsers);
+        intent.putParcelableArrayListExtra("NEW_USER_LIST", newlyAddedUsers);
         setResult(2,intent);
         finish();//finishing activity
+    }
+
+    private void printUsers() {
+        Log.d(LOG_TAG, "Already added users: ");
+        for (TeamMemberListItem t : this.alreadyAddedUsers) {
+            Log.d(LOG_TAG, "UUID: " + t.getUuid() + ", Name: " + t.getFirstName() + " " + t.getLastName());
+        }
+    }
+
+    private void testAddCode(String code) {
+        if(code == null) {
+            return;
+        }
+
+        if ((previousCodes.indexOf(code) != -1)) {
+            return;
+        }
+
+        if (!isValidUserCode(code)) {
+            Log.d(LOG_TAG, "Invalid QR Code! -- " + code);
+            return;
+        }
+
+        String uuid = getUuid(code);
+
+        if (isUserAlreadyPartOfTeam(uuid)) {
+            Log.d(LOG_TAG, "User already added! -- " + code);
+            return;
+        }
+
+        if (!isUserFromAcceptableOrg(code)) {
+            Log.d(LOG_TAG, "User does not belong to this organization! -- " + code);
+            return;
+        }
+
+        previousCodes.add(code);
+        String name = addUser(code);
+        Log.d(LOG_TAG, name + " successfully added!");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        barcodeView.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        barcodeView.pause();
+    }
+
+    public void pause(View view) {
+        barcodeView.pause();
+    }
+
+    public void resume(View view) {
+        barcodeView.resume();
     }
 
     public void triggerScan(View view) {
@@ -126,6 +203,9 @@ public class CustomQRScannerActivity extends Activity implements View.OnClickLis
     private boolean isUserFromAcceptableOrg(String code) {
         String[] tokens = code.split(",");
         String[] orgIds = tokens[2].split("_");
+
+/*        Log.d(LOG_TAG, "----------------------------------------------- OrgId = " + orgId + " Profile org ids = " + tokens[2]);
+*/
         boolean found = false;
         for (String oId : orgIds) {
             long orgIdLong = Long.parseLong(oId);
@@ -162,6 +242,7 @@ public class CustomQRScannerActivity extends Activity implements View.OnClickLis
         user.setDesignation(tokens[5]);
         user.setMobile(tokens[6]);
         alreadyAddedUsers.add(user);
+        newlyAddedUsers.add(user);
 
         return tokens[3] + " " + tokens[4];
     }
